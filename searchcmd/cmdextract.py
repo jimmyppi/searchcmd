@@ -10,6 +10,7 @@ RE_SPACE = re.compile(r'\s+', re.U+re.S)
 RE_ONLY_LETTERS = re.compile('^[a-z]+$')
 RE_SENTENCE_END = re.compile(r'[a-z][\.\!\?]$')
 
+MAX_COMMAND_LENGTH = 200
 
 def extract_commands(html_docs, base_commands=None):
     """Extract all commands in the html documents.
@@ -25,6 +26,9 @@ def extract_commands(html_docs, base_commands=None):
         html_docs = [html_docs]
     if isinstance(base_commands, basestring):
         base_commands = [base_commands]
+    remove_sudo = lambda cmd: cmd
+    if not base_commands or not 'sudo' in base_commands:
+        remove_sudo = lambda cmd: re.sub('^sudo\s+', '', cmd)
     cmdrex = get_command_rex(base_commands)
     commands = Commands()
     for doc in html_docs:
@@ -34,6 +38,7 @@ def extract_commands(html_docs, base_commands=None):
             for line_nr, txt in iter_texts(doc):
                 cmd = get_command(txt, cmdrex)
                 if cmd:
+                    remove_sudo(cmd)
                     if cmd in seen:
                         continue
                     seen.add(cmd)
@@ -42,7 +47,8 @@ def extract_commands(html_docs, base_commands=None):
             commands.nr_docs += 1
         except Exception as e:
             # TODO
-            print 'EXTRACT ERROR:', doc.url.url, e
+            continue
+            #print 'EXTRACT ERROR:', doc.url.url, e
     if base_commands:
         return commands
 
@@ -71,28 +77,28 @@ def get_command_rex(base_commands):
 
 def iter_texts(html_doc):
     tree = html.fromstring(html_doc.body, base_url=html_doc.url.url)
-    for txt in _iter_texts(tree):
-        yield txt
+    for line, txt in _iter_texts(tree):
+        yield line, txt
 
 
 def _iter_texts(tree):
     if tree.tag == 'script' or tree.tag is etree.Comment:
         return
     line = tree.sourceline
-    txts = clean_text(tree.text)
+    txts = clean_text(tree.text, tree.tag)
     if txts:
         for txt in txts:
             yield line, txt
     for child in tree.getchildren():
         for line, txt in _iter_texts(child):
             yield line, txt
-    txts = clean_text(tree.tail)
+    txts = clean_text(tree.tail, tree.tag)
     if txts:
         for txt in txts:
             yield line, txt
 
 
-def clean_text(raw_txt):
+def clean_text(raw_txt, tag):
     if not raw_txt:
         return []
     txts = []
@@ -101,10 +107,9 @@ def clean_text(raw_txt):
         txt = txt.strip()
         if txt:
             txts.append(txt)
-    txt = ' '.join(txts)
-    if txt.startswith('<!--'):
-        return []
-    return [txt]
+    if not tag == 'pre':
+        txts = [' '.join(txts)]
+    return txts
 
 
 def get_command(txt, rex):
@@ -118,6 +123,8 @@ def get_command(txt, rex):
 
 
 def is_command(cmd_string):
+    if len(cmd_string) > MAX_COMMAND_LENGTH:
+        return False
     if RE_SENTENCE_END.search(cmd_string):
         return False
     only_letters = []
