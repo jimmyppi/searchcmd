@@ -5,12 +5,13 @@ Main entry point of the application.
 
 TODO:
 *- cli (-v --verbose -e --engine --no-cache)
+*- Prettier output, color output?
+*- cli flags have been reversed
+*- cache does not work to load from
 - "or space)"
-- Prettier output, color output?
-- cli flags have been reversed
-- cache does not work to load from
-- handle of when command starts with sudo
-- print download progress (one dot per downloaded search result?)
+- sometimes you want to split on '\n' ("search replace"), and sometimtes not ("get process id", docker "remove stopped containers")
+*- handle of when command starts with sudo
+- print download progress (one dot per downloaded search result?), x when error?
 - implement download.get
 - support for using beautifulsoup if lxml fails
 *- cache (store in tmp), store as json? to_json/from_json for commands
@@ -41,9 +42,9 @@ def get_arg_parser():
     parser.add_argument(
         'query', nargs='+',
         help="Type a command and/or describe what you want in quotes.")
-    parser.add_argument('-v', '--verbose', action='store_false',
+    parser.add_argument('-v', '--verbose', action='store_true',
                         help='Include source url in output.')
-    parser.add_argument('--no-cache', action='store_false',
+    parser.add_argument('--no-cache', action='store_true',
                         help='Skip cache, always do a new search.')
     parser.add_argument('--engine', help='The search engine to use.',
                         default='google', choices=ENGINES.keys())
