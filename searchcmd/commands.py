@@ -1,4 +1,11 @@
+from pygments import highlight
+from pygments.lexers import BashLexer
+from pygments.formatters import TerminalFormatter
+
 from collections import Counter
+
+LEXER = BashLexer()
+FORMATTER = TerminalFormatter()
 
 class Command(object):
     
@@ -42,17 +49,19 @@ class Command(object):
         """
         Example output:
 
-        cmd --flag     fromdomain.com, otherdomain.com
+        cmd --flag     (fromdomain.com, otherdomain.com)
         
         Include urls to all sources if verbose:
 
-        cmd --flag     fromdomain.com
+        cmd --flag     (fromdomain.com)
             http://fromdomain.com/full/path
          ...
 
         """
-        s = '{}\t{}'.format(self.cmd, ' '.join(
-            (d for d,_ in self.domains.most_common(2))))
+        cmd = highlight(self.cmd, LEXER, FORMATTER).strip()
+        domains = '({})'.format(
+            ', '.join(d for d,_ in self.domains.most_common(2)))
+        s = '{}\t{}'.format(cmd, domains)
         if verbose:
             s += '\n {}'.format(
                 '\n'.join(['\t{}'.format(doc.url.url) for doc in self.docs]))
