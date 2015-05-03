@@ -1,7 +1,7 @@
 import re
 from collections import defaultdict
 
-from lxml import html, etree
+from lxml import etree
 
 from commands import Command, Commands
 from download import HtmlDocument
@@ -45,10 +45,8 @@ def extract_commands(html_docs, base_commands=None):
                     commands.add_command(Command(cmd, line_nr, nr_cmds, doc))
                     nr_cmds += 1
             commands.nr_docs += 1
-        except Exception as e:
-            # TODO
+        except:
             continue
-            #print 'EXTRACT ERROR:', doc.url.url, e
     if base_commands:
         return commands
 
@@ -76,8 +74,7 @@ def get_command_rex(base_commands):
 
 
 def iter_texts(html_doc):
-    tree = html.fromstring(html_doc.body, base_url=html_doc.url.url)
-    for line, txt in _iter_texts(tree):
+    for line, txt in _iter_texts(html_doc.tree):
         yield line, txt
 
 
@@ -103,12 +100,18 @@ def clean_text(raw_txt, tag):
         return []
     txts = []
     for txt in raw_txt.split('\n'):
-        txt = RE_SPACE.sub(' ', txt)
         txt = txt.strip()
+        # We do not want output from commands
+        if '\t' in txt or '   ' in txt:
+            continue
+        txt = RE_SPACE.sub(' ', txt)
         if txt:
             txts.append(txt)
-    if not tag == 'pre':
-        txts = [' '.join(txts)]
+    if not txts:
+        return []
+    if tag == 'pre' or len(txts) > 2:
+        return txts
+    txts = [' '.join(txts)]
     return txts
 
 

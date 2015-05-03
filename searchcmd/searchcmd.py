@@ -9,10 +9,12 @@ TODO:
 *- cli flags have been reversed
 *- cache does not work to load from
 - "or space)"
-- sometimes you want to split on '\n' ("search replace"), and sometimtes not ("get process id", docker "remove stopped containers")
+- Sometimes you do not want to split on '\n' ("search replace")
+   Sometimtes you do ("get process id", docker "remove stopped containers"). In those two examples, the output of the command is included in a code-tag.
+   tar "unpack", listing of examples in one code block. But that was in pre-tag, which should always be splitted by \n.
 *- handle of when command starts with sudo
-- print download progress (one dot per downloaded search result?), x when error?
-- implement download.get
+*- print download progress (one dot per downloaded search result?), x when error
+*- implement download.get
 - support for using beautifulsoup if lxml fails
 *- cache (store in tmp), store as json? to_json/from_json for commands
 - error handling
@@ -25,7 +27,7 @@ import argparse
 
 from search_engines import get_engine, ENGINES
 from cmdextract import extract_commands
-from download import iter_get, Request
+from download import get, iter_get, Request
 import cache
 
 
@@ -122,8 +124,7 @@ def search(query=None, cmd=None, search_engine='google', max_download=5):
     engine = get_engine(search_engine)
     search_req = engine.get_search_request(query)
 
-    # TODO: Implement download.get
-    search_result = next(iter_get(search_req))
+    search_result = get(search_req)
     urls = engine.get_hits(search_result)
     docs = iter_get([Request(u.url) for u in urls[:max_download]])
     
