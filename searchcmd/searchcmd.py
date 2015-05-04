@@ -8,16 +8,16 @@ TODO:
 *- Prettier output, color output?
 *- cli flags have been reversed
 *- cache does not work to load from
-- "or space)"
-- Sometimes you do not want to split on '\n' ("search replace")
+*- Sometimes you do not want to split on '\n' ("search replace")
    Sometimtes you do ("get process id", docker "remove stopped containers"). In those two examples, the output of the command is included in a code-tag.
    tar "unpack", listing of examples in one code block. But that was in pre-tag, which should always be splitted by \n.
 *- handle of when command starts with sudo
 *- print download progress (one dot per downloaded search result?), x when error
 *- implement download.get
-- support for using beautifulsoup if lxml fails
-*- cache (store in tmp), store as json? to_json/from_json for commands
-- error handling
+*- support for using beautifulsoup if lxml fails
+*- cache (store in tmp), store as json? to_json/from_json for commands-
+- "or space)"
+- error handling (go to next if download fails?, logging of extraction errors?)
 - tests (py2 + py3)
 - package
 """

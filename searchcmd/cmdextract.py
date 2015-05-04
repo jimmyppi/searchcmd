@@ -9,6 +9,7 @@ from download import HtmlDocument
 RE_SPACE = re.compile(r'\s+', re.U+re.S)
 RE_ONLY_LETTERS = re.compile('^[a-z]+$')
 RE_SENTENCE_END = re.compile(r'[a-z][\.\!\?]$')
+RE_FLAG = re.compile(r'^(-){1,2}[a-z0-9]')
 
 MAX_COMMAND_LENGTH = 200
 
@@ -66,11 +67,10 @@ def get_command_rex(base_commands):
     # TODO: Check that the rex stops at newline
     # TODO: Document rex parts
     if not base_commands:
-        # Command must start and end with lower case a-z
-        #  and min number chars is two.
-        base_commands = [r'[a-z][a-z0-9\-]*[a-z]']
+        # More detailed check of command word will be done in is_command
+        base_commands = [r'[a-z0-9][a-z0-9\-]*']
     return re.compile(
-        '^[\W]*\s*(?P<cmd>(%s)\s.+$)' % '|'.join(base_commands))
+        r'^[\$\>\:\#\%%]*\s*(?P<cmd>(%s)\s.+$)' % '|'.join(base_commands))
 
 
 def iter_texts(html_doc):
@@ -78,24 +78,31 @@ def iter_texts(html_doc):
         yield line, txt
 
 
-def _iter_texts(tree):
+def _iter_texts(tree, in_pre=False):
     if tree.tag == 'script' or tree.tag is etree.Comment:
         return
+    in_pre = in_pre or tree.tag == 'pre'
     line = tree.sourceline
-    txts = clean_text(tree.text, tree.tag)
+    txts = clean_text(tree.text)
     if txts:
-        for txt in txts:
-            yield line, txt
+        if not in_pre:
+            yield line, ' '.join(txts)
+        else:
+            for i, txt in enumerate(txts):
+                yield line+i, txt
     for child in tree.getchildren():
-        for line, txt in _iter_texts(child):
+        for line, txt in _iter_texts(child, in_pre):
             yield line, txt
-    txts = clean_text(tree.tail, tree.tag)
+    txts = clean_text(tree.tail)
     if txts:
-        for txt in txts:
-            yield line, txt
+        if not in_pre:
+            yield line, ' '.join(txts)
+        else:
+            for i, txt in enumerate(txts):
+                yield line+i, txt
 
 
-def clean_text(raw_txt, tag):
+def clean_text(raw_txt):
     if not raw_txt:
         return []
     txts = []
@@ -107,11 +114,6 @@ def clean_text(raw_txt, tag):
         txt = RE_SPACE.sub(' ', txt)
         if txt:
             txts.append(txt)
-    if not txts:
-        return []
-    if tag == 'pre' or len(txts) > 2:
-        return txts
-    txts = [' '.join(txts)]
     return txts
 
 
@@ -125,15 +127,29 @@ def get_command(txt, rex):
     return cmd
 
 
+def is_command_word(word):
+    if not word:
+        return False
+    if word.isdigit():
+        return False
+    if len(word) == 1:
+        return True if re.match('[a-z]$', word) else False
+    return True if re.match(r'[a-z0-9][a-z0-9\-]*[a-z0-9]$', word) else False
+
+
 def is_command(cmd_string):
     if len(cmd_string) > MAX_COMMAND_LENGTH:
         return False
     if RE_SENTENCE_END.search(cmd_string):
         return False
+    words = cmd_string.split()
+    if not is_command_word(words[0]):
+        return False
     only_letters = []
     others = []
+    flags = []
     nr_consecutively_letter_words = 0
-    for word in cmd_string.split():
+    for word in words:
         if RE_ONLY_LETTERS.match(word):
             nr_consecutively_letter_words += 1
             if nr_consecutively_letter_words > 2:
@@ -141,7 +157,11 @@ def is_command(cmd_string):
             only_letters.append(word)
         else:
             nr_consecutively_letter_words = 0
+            if RE_FLAG.match(word):
+                flags.append(word)
             others.append(word)
-    if not others:# and len(only_letters) > 3:
+    if flags:
+        return True
+    if not others:
         return False
     return True
