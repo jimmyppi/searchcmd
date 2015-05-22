@@ -5,6 +5,7 @@ from concurrent.futures import as_completed
 
 from requests_futures.sessions import FuturesSession
 from lxml.html import fromstring, tostring, soupparser
+import tld
 
 
 def get(request):
@@ -93,5 +94,4 @@ class Url(object):
     def __init__(self, url):
         self.url = url
         self.domain = re.sub('^www.', '', urlparse(self.url).netloc)
-        # TODO: Double top domain, example: .co.uk
-        self.base_domain = '.'.join(self.domain.split('.')[-2:])
+        self.base_domain = tld.get_tld(self.url)
