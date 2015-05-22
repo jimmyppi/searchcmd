@@ -6,12 +6,6 @@ from lxml import etree
 from commands import Command, Commands
 from download import HtmlDocument
 
-RE_SPACE = re.compile(r'\s+', re.U+re.S)
-RE_ONLY_LETTERS = re.compile('^[a-z]+$')
-RE_SENTENCE_END = re.compile(r'[a-z][\.\!\?]$')
-RE_FLAG = re.compile(r'^(-){1,2}[a-z0-9]')
-
-MAX_COMMAND_LENGTH = 200
 
 def extract_commands(html_docs, base_commands=None):
     """Extract all commands in the html documents.
@@ -25,143 +19,203 @@ def extract_commands(html_docs, base_commands=None):
     """
     if isinstance(html_docs, HtmlDocument):
         html_docs = [html_docs]
-    if isinstance(base_commands, basestring):
-        base_commands = [base_commands]
-    remove_sudo = lambda cmd: cmd
-    if not base_commands or not 'sudo' in base_commands:
-        remove_sudo = lambda cmd: re.sub('^sudo\s+', '', cmd)
-    cmdrex = get_command_rex(base_commands)
+    extractor = CommandExtractor(base_commands)
     commands = Commands()
     for doc in html_docs:
         seen = set()
         try:
             nr_cmds = 0
-            for line_nr, txt in iter_texts(doc):
-                cmd = get_command(txt, cmdrex)
-                if cmd:
-                    remove_sudo(cmd)
-                    if cmd in seen:
-                        continue
-                    seen.add(cmd)
-                    commands.add_command(Command(cmd, line_nr, nr_cmds, doc))
-                    nr_cmds += 1
+            for line_nr, cmd in extractor.iter_commands(doc):
+                if cmd in seen:
+                    continue
+                seen.add(cmd)
+                commands.add_command(Command(cmd, line_nr, nr_cmds, doc))
+                nr_cmds += 1
             commands.nr_docs += 1
         except:
             continue
+
     if base_commands:
         return commands
 
-    # Only keep commands with more than one occurence
-    commands_by_first_word = defaultdict(list)
+    # Only keep command names with more than one occurence
+    commands_by_name = defaultdict(list)
     for command in commands:
-        commands_by_first_word[command.cmd.split()[0]].append(command)
+        commands_by_name[command.name].append(command)
     keep = {}
-    for cmd, coms in commands_by_first_word.iteritems():
+    for coms in commands_by_name.itervalues():
         if len(coms) > 1 or len(coms[0].lines) > 1:
             for com in coms:
                 keep[com.cmd] = com
     return Commands(keep, commands.nr_docs)
 
 
-def get_command_rex(base_commands):
-    # TODO: Check that the rex stops at newline
-    # TODO: Document rex parts
-    if not base_commands:
-        # More detailed check of command word will be done in is_command
-        base_commands = [r'[a-z0-9][a-z0-9\-]*']
-    return re.compile(
-        r'^[\$\>\:\#\%%]*\s*(?P<cmd>(%s)\s.+$)' % '|'.join(base_commands))
+class CommandExtractor(object):
+    """Extract commands from html documents.
 
+    Usage:
 
-def iter_texts(html_doc):
-    for line, txt in _iter_texts(html_doc.tree):
-        yield line, txt
+    >>> extractor = CommandExtractor('git')
+    >>> for line, cmd in extractor.iter_commands(html_doc)
+    >>>    ...
 
+    """
+    COMMAND_REX = (
+        # The command could start with a prompt
+        r'^[\$\>\:\#\%%]*\s*'
+        # The command could start with sudo
+        r'(?P<cmd>(sudo\s+|)'
+        # Insert command name alternatives here.
+        r'(%s)'
+        # The rest of the command that contains sub command name,
+        # options and arguments.
+        r'\s.+$)')
 
-def _iter_texts(tree, in_pre=False):
-    if tree.tag == 'script' or tree.tag is etree.Comment:
-        return
-    in_pre = in_pre or tree.tag == 'pre'
-    line = tree.sourceline
-    txts = clean_text(tree.text)
-    if txts:
-        if not in_pre:
-            yield line, ' '.join(txts)
+    RE_COMMAND_NAME = re.compile((
+        r'^('
+        # Must be a letter if the name only contain one char
+        r'[a-z]|'
+        # Must start and end with letter or digit, but can contain '-'
+        r'[a-z0-9][a-z0-9\-]*[a-z0-9]'
+        r')$')
+    )
+
+    RE_SPACE = re.compile(r'\s+', re.U+re.S)
+    RE_ONLY_LETTERS = re.compile('^[a-z]+$')
+    RE_SENTENCE_END = re.compile(r'[a-z][\.\!\?]$')
+    RE_FLAG = re.compile(r'^(-){1,2}[a-z0-9]')
+    RE_SUDO = re.compile(r'^sudo\s+')
+
+    # The max length of a command
+    MAX_COMMAND_LENGTH = 200
+    # The command must not contain more than this many consecutively
+    # words that only contain letters.
+    MAX_CONSECUTIVELY_LETTER_WORDS = 2
+
+    def __init__(self, base_commands=None):
+        if isinstance(base_commands, basestring):
+            base_commands = [base_commands]
+        if base_commands and 'sudo' in base_commands:
+            self.remove_sudo = lambda cmd: cmd
         else:
-            for i, txt in enumerate(txts):
-                yield line+i, txt
-    for child in tree.getchildren():
-        for line, txt in _iter_texts(child, in_pre):
-            yield line, txt
-    txts = clean_text(tree.tail)
-    if txts:
-        if not in_pre:
-            yield line, ' '.join(txts)
-        else:
-            for i, txt in enumerate(txts):
-                yield line+i, txt
+            self.remove_sudo = lambda cmd: self.RE_SUDO.sub('', cmd)
+        self.cmdrex = self._get_command_rex(base_commands)
 
+    def _get_command_rex(self, base_commands):
+        if not base_commands:
+            # Command must start with a lower case letter or a digit.
+            # A more detailed check of the command will be done in is_command
+            base_commands = [r'[a-z0-9][a-z0-9\-]*']
+        return re.compile(self.COMMAND_REX % '|'.join(base_commands))
 
-def clean_text(raw_txt):
-    if not raw_txt:
-        return []
-    txts = []
-    for txt in raw_txt.split('\n'):
-        txt = txt.strip()
-        # We do not want output from commands
-        if '\t' in txt or '   ' in txt:
-            continue
-        txt = RE_SPACE.sub(' ', txt)
-        if txt:
-            txts.append(txt)
-    return txts
+    def iter_commands(self, html_doc):
+        """Generate commands found in the html document."""
+        for line, txt in self.iter_text_lines(html_doc):
+            cmd = self.get_command(txt)
+            if cmd:
+                yield line, cmd
 
+    def get_command(self, txt):
+        """Return command found in text or None if no command was found."""
+        m = self.cmdrex.search(txt)
+        if not m:
+            return
+        cmd = m.group('cmd')
+        cmd = self.remove_sudo(cmd)
+        if not self.is_command(cmd):
+            return
+        return cmd
 
-def get_command(txt, rex):
-    m = rex.search(txt)
-    if not m:
-        return
-    cmd = m.group('cmd')
-    if not is_command(cmd):
-        return
-    return cmd
+    def is_command_name(self, word):
+        """Return True if word is a valid command name."""
+        if not word:
+            return False
+        if word.isdigit():
+            return False
+        return True if self.RE_COMMAND_NAME.match(word) else False
 
-
-def is_command_word(word):
-    if not word:
+    def is_command_output(self, line):
+        """Return True if the line looks like output from a command."""
+        if '\t' in line or '   ' in line:
+            return True
         return False
-    if word.isdigit():
-        return False
-    if len(word) == 1:
-        return True if re.match('[a-z]$', word) else False
-    return True if re.match(r'[a-z0-9][a-z0-9\-]*[a-z0-9]$', word) else False
 
+    def is_command(self, candidate):
+        """Return True if the candidate looks like a command."""
+        if len(candidate) > self.MAX_COMMAND_LENGTH:
+            return False
+        if self.RE_SENTENCE_END.search(candidate):
+            return False
+        if self.is_command_output(candidate):
+            return False
+        words = candidate.split()
+        if not self.is_command_name(words[0]):
+            return False
 
-def is_command(cmd_string):
-    if len(cmd_string) > MAX_COMMAND_LENGTH:
-        return False
-    if RE_SENTENCE_END.search(cmd_string):
-        return False
-    words = cmd_string.split()
-    if not is_command_word(words[0]):
-        return False
-    only_letters = []
-    others = []
-    flags = []
-    nr_consecutively_letter_words = 0
-    for word in words:
-        if RE_ONLY_LETTERS.match(word):
-            nr_consecutively_letter_words += 1
-            if nr_consecutively_letter_words > 2:
-                return False
-            only_letters.append(word)
-        else:
-            nr_consecutively_letter_words = 0
-            if RE_FLAG.match(word):
-                flags.append(word)
-            others.append(word)
-    if flags:
+        only_letters = []
+        others = []
+        flags = []
+        nr_consecutively_letter_words = 0
+        for word in words:
+            if self.RE_ONLY_LETTERS.match(word):
+                nr_consecutively_letter_words += 1
+                if nr_consecutively_letter_words > 2:
+                    return False
+                only_letters.append(word)
+            else:
+                nr_consecutively_letter_words = 0
+                if self.RE_FLAG.match(word):
+                    flags.append(word)
+                others.append(word)
+        if flags:
+            return True
+        if not others:
+            return False
         return True
-    if not others:
-        return False
-    return True
+
+    def iter_text_lines(self, html_doc):
+        """Generate text lines found in the html document."""
+        for line, txt in self._iter_texts(html_doc.tree):
+            yield line, txt
+
+    def _iter_texts(self, tree, in_pre=False):
+        """Find text snippets recursively in the html tree.
+
+        If in a pre-tag, split on line breaks.
+        If the tree is a code tag, merge all text snippets in the tree.
+        """
+        in_pre = in_pre or tree.tag == 'pre'
+
+        def iter_tree_texts():
+            if tree.tag == 'code':
+                yield tree.sourceline, tree.text_content()
+                return
+            line = tree.sourceline
+            if not self.skip_tree(tree):
+                if tree.text:
+                    yield line, tree.text
+                for child in tree.getchildren():
+                    for line, txt in self._iter_texts(child, in_pre):
+                        yield line, txt
+            if tree.tail:
+                yield line, tree.tail
+        txt_gen = iter_tree_texts()
+
+        if not in_pre:
+            for line, txt in txt_gen:
+                txt = self.fix_space(txt)
+                if txt:
+                    yield line, txt
+        else:
+            for first_line, txt in txt_gen:
+                for line, txt_line in enumerate(txt.split('\n')):
+                    txt_line = txt_line.strip()
+                    if txt_line:
+                        yield first_line + line, txt_line
+
+    @staticmethod
+    def skip_tree(tree):
+        return tree.tag == 'script' or tree.tag is etree.Comment
+
+    def fix_space(self, txt):
+        return self.RE_SPACE.sub(' ', txt.strip())

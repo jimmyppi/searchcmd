@@ -7,15 +7,16 @@ from collections import Counter
 LEXER = BashLexer()
 FORMATTER = TerminalFormatter()
 
+
 class Command(object):
-    
+
     def __init__(self, cmd, line, idx, doc):
         self.cmd = cmd
+        self.name = cmd.split()[0]
         self.lines = [line]
         self.idxs = [idx]
         self.docs = [doc]
         self.domains = Counter({doc.url.domain: 1})
-        
 
     def to_dict(self):
         return {'cmd': self.cmd,
@@ -50,7 +51,7 @@ class Command(object):
         Example output:
 
         cmd --flag     (fromdomain.com, otherdomain.com)
-        
+
         Include urls to all sources if verbose:
 
         cmd --flag     (fromdomain.com)
@@ -59,12 +60,12 @@ class Command(object):
 
         """
         cmd = highlight(self.cmd, LEXER, FORMATTER).strip()
-        domains = '({})'.format(
+        domains = u'({})'.format(
             ', '.join(d for d,_ in self.domains.most_common(2)))
-        s = '{}\t{}'.format(cmd, domains)
+        s = u'{}\t{}'.format(cmd, domains)
         if verbose:
-            s += '\n {}'.format(
-                '\n'.join(['\t{}'.format(doc.url.url) for doc in self.docs]))
+            s += u'\n {}'.format(
+                u'\n'.join([u'\t{}'.format(doc.url.url) for doc in self.docs]))
         return s
 
     def score(self, nr_docs):
