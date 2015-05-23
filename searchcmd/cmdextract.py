@@ -60,16 +60,18 @@ class CommandExtractor(object):
     >>>    ...
 
     """
-    COMMAND_REX = (
+    IGNORE_TAGS = set(['style', 'head', 'script', etree.Comment])
+    COMMAND_REX = re.compile((
         # The command could start with a prompt
         r'^[\$\>\:\#\%%]*\s*'
         # The command could start with sudo
         r'(?P<cmd>(sudo\s+|)'
-        # Insert command name alternatives here.
-        r'(%s)'
+        # Command must start with a lower case letter or a digit.
+        # A more detailed check of the command will be done in is_command
+        r'[a-z0-9][a-z0-9\-]*'
         # The rest of the command that contains sub command name,
         # options and arguments.
-        r'\s.+$)')
+        r'\s.+$)'))
 
     RE_COMMAND_NAME = re.compile((
         r'^('
@@ -77,12 +79,11 @@ class CommandExtractor(object):
         r'[a-z]|'
         # Must start and end with letter or digit, but can contain '-'
         r'[a-z0-9][a-z0-9\-]*[a-z0-9]'
-        r')$')
-    )
+        r')$'))
 
     RE_SPACE = re.compile(r'\s+', re.U+re.S)
-    RE_ONLY_LETTERS = re.compile('^[a-z]+$')
-    RE_SENTENCE_END = re.compile(r'[a-z][\.\!\?]$')
+    RE_ONLY_LETTERS = re.compile('^[a-z]+$', re.I)
+    RE_SENTENCE_END = re.compile(r'[a-z][\.\!\?\:]+$')
     RE_FLAG = re.compile(r'^(-){1,2}[a-z0-9]')
     RE_SUDO = re.compile(r'^sudo\s+')
 
@@ -95,18 +96,13 @@ class CommandExtractor(object):
     def __init__(self, base_commands=None):
         if isinstance(base_commands, basestring):
             base_commands = [base_commands]
+        if base_commands:
+            base_commands = set(base_commands)
         if base_commands and 'sudo' in base_commands:
             self.remove_sudo = lambda cmd: cmd
         else:
             self.remove_sudo = lambda cmd: self.RE_SUDO.sub('', cmd)
-        self.cmdrex = self._get_command_rex(base_commands)
-
-    def _get_command_rex(self, base_commands):
-        if not base_commands:
-            # Command must start with a lower case letter or a digit.
-            # A more detailed check of the command will be done in is_command
-            base_commands = [r'[a-z0-9][a-z0-9\-]*']
-        return re.compile(self.COMMAND_REX % '|'.join(base_commands))
+        self.wanted_commands = base_commands
 
     def iter_commands(self, html_doc):
         """Generate commands found in the html document."""
@@ -117,14 +113,26 @@ class CommandExtractor(object):
 
     def get_command(self, txt):
         """Return command found in text or None if no command was found."""
-        m = self.cmdrex.search(txt)
+        m = self.COMMAND_REX.search(txt)
         if not m:
             return
         cmd = m.group('cmd')
         cmd = self.remove_sudo(cmd)
         if not self.is_command(cmd):
             return
+        if not self.has_wanted_command(cmd):
+            return
         return cmd
+
+    def has_wanted_command(self, line):
+        """Return True if the line contains any of the wanted commands."""
+        if not self.wanted_commands:
+            return True
+        cmds = line.split(' | ')
+        for cmd in cmds:
+            if cmd.split()[0] in self.wanted_commands:
+                return True
+        return False
 
     def is_command_name(self, word):
         """Return True if word is a valid command name."""
@@ -213,9 +221,8 @@ class CommandExtractor(object):
                     if txt_line:
                         yield first_line + line, txt_line
 
-    @staticmethod
-    def skip_tree(tree):
-        return tree.tag == 'script' or tree.tag is etree.Comment
+    def skip_tree(self, tree):
+        return tree.tag in self.IGNORE_TAGS
 
     def fix_space(self, txt):
         return self.RE_SPACE.sub(' ', txt.strip())
