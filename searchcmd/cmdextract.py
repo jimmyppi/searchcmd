@@ -150,6 +150,8 @@ class CommandExtractor(object):
 
     def is_command(self, candidate):
         """Return True if the candidate looks like a command."""
+        if not candidate:
+            return False
         if len(candidate) > self.MAX_COMMAND_LENGTH:
             return False
         if self.RE_SENTENCE_END.search(candidate):

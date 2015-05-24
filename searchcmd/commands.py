@@ -76,7 +76,7 @@ class Command(object):
         return score
 
     def __repr__(self):
-        return '<cmd {}>'.format(self.cmd)
+        return u'<cmd {}>'.format(self.cmd)
 
 
 class Commands(object):
