@@ -2,10 +2,12 @@ import os
 from itertools import izip
 from unittest import TestCase
 
+from testutils import iter_html_docs, get_html_doc
 from download import HtmlDocument
 from cmdextract import CommandExtractor, extract_commands
 
-TEST_DATA_DIR = os.path.join(os.path.dirname(__file__), 'testdata')
+TEST_DATA_DIR = os.path.join(
+    os.path.dirname(__file__), 'testdata', 'cmdextract')
 
 COMMANDS = {
     'http://unixmantra.com': [
@@ -150,25 +152,13 @@ MERGED_COMMANDS = set([
     'hwclock -r'])
 
 
-def iter_html_docs():
-    for fname in os.listdir(TEST_DATA_DIR):
-        yield get_html_doc(fname)
-
-
-def get_html_doc(fname):
-    with open(os.path.join(TEST_DATA_DIR, fname)) as inp:
-        body = inp.read()
-    base_url = 'http://%s' % fname
-    return HtmlDocument(base_url, body)
-
-
 class TestCommandExtract(TestCase):
 
     def test_extract_commands(self):
-        cmds = extract_commands(iter_html_docs())
+        cmds = extract_commands(iter_html_docs(TEST_DATA_DIR))
         self.assertEqual(set(cmds.commands.keys()), MERGED_COMMANDS)
 
-        cmds = extract_commands(iter_html_docs(), 'xargs')
+        cmds = extract_commands(iter_html_docs(TEST_DATA_DIR), 'xargs')
         self.assertEqual(set(cmds.commands.keys()), set([
             'find /tmp -name "*.tmp" | xargs rm',
             u'find ./music -name "*.mp3" -print0 | xargs -0 ls',
@@ -177,7 +167,8 @@ class TestCommandExtract(TestCase):
             'find . -name "*.sh" -print0 | xargs -0 -I {} mv {} ~/back.scripts',
             u'find ./work -print | xargs grep "profit"']))
 
-        cmds = extract_commands(get_html_doc('stackoverflow.com'), 'xargs')
+        cmds = extract_commands(
+            get_html_doc(TEST_DATA_DIR, 'stackoverflow.com'), 'xargs')
         self.assertEqual(cmds.commands, {})
 
         doc = HtmlDocument('http://stackoverflow.com', '')
@@ -187,7 +178,7 @@ class TestCommandExtract(TestCase):
 
     def test_iter_texts(self):
         extractor = CommandExtractor()
-        for doc in iter_html_docs():
+        for doc in iter_html_docs(TEST_DATA_DIR):
             print doc.url.url
             nr_txts = 0
             for line, txt in extractor.iter_text_lines(doc):
@@ -196,7 +187,7 @@ class TestCommandExtract(TestCase):
 
     def test_iter_commands(self):
         extractor = CommandExtractor()
-        for doc in iter_html_docs():
+        for doc in iter_html_docs(TEST_DATA_DIR):
             print doc.url.url
             for (line, cmd), correct in izip(extractor.iter_commands(doc),
                                              COMMANDS[doc.url.url]):
