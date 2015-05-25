@@ -1,3 +1,18 @@
+"""
+Search the internet and extract urls to the search hits.
+
+Usage:
+
+>>> e = get_engine('google')
+>>> req = e.get_search_request('linux')
+
+Now download the request and init a html doc.
+Extract urls:
+
+>>> urls = e.get_hits(html_doc)
+
+"""
+
 import re
 import urllib
 from collections import defaultdict
@@ -6,10 +21,12 @@ from lxml import html
 
 from download import Url, Request
 
+
 def get_engine(name):
-    if not name in ENGINES:
+    if name not in ENGINES:
         raise ValueError('Unkown search engine: %r' % name)
     return ENGINES[name]
+
 
 class SearchEngine(object):
     BASE_URL = None
@@ -19,7 +36,7 @@ class SearchEngine(object):
 
     def get_search_request(self, query):
         url = self.BASE_URL.format(urllib.quote_plus(query.encode('utf-8')))
-        return Request(url=url)#, headers=self.REQUEST_HEADERS)
+        return Request(url=url)
 
     def get_id(self, tree):
         tag = tree.tag.strip()
@@ -41,7 +58,7 @@ class SearchEngine(object):
         if not url:
             return
         if not url.startswith('http'):
-            if not 'http' in url:
+            if 'http' not in url:
                 return
             m = self.RE_URL_AS_PARAM.search(url)
             if not m:
@@ -79,16 +96,6 @@ class Google(SearchEngine):
     BASE_URL = 'http://google.com/search?q={}'
     RE_INTERNAL_DOMAINS = re.compile(
         r'(google|googleusercontent)\.[a-z][a-z][a-z]?$')
-
-    REQUEST_HEADERS = {
-        'Host': "google.com",
-        'User-Agent': ("Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:36.0) "
-                       "Gecko/20100101 Firefox/36.0"),
-        'Accept': ("text/html,application/xhtml+xml,"
-                   "application/xml;q=0.9,*/*;q=0.8"),
-        'Accept-Language': "en-US,en;q=0.5",
-        'Accept-Encoding': "gzip, deflate",
-        'Connection': "keep-alive"}
 
 
 class Bing(SearchEngine):
