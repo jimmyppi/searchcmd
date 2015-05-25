@@ -1,0 +1,1483 @@
+<!DOCTYPE html><html
+dir="ltr" lang="en-US"><head><meta
+charset="UTF-8" /><meta
+name="viewport" content="width=device-width, initial-scale=1" /><link
+rel="stylesheet" type="text/css" href="http://www.cyberciti.biz/faq/wp-content/thesis/skins/classic-r/css.css" media="screen, projection" /><title>Linux Set Date and Time From a Command Prompt</title><link
+rel="canonical" href="http://www.cyberciti.biz/faq/howto-set-date-time-from-linux-command-prompt/" /><link
+rel="alternate" type="application/rss+xml" title="nixCraft feed" href="http://www.cyberciti.biz/faq/feed/" /><link
+rel="pingback" href="http://www.cyberciti.biz/faq/xmlrpc.php" /><link
+rel="author" href="https://plus.google.com/+CybercitiBiz?prsrc=5" /><link
+rel="alternate" type="application/rss+xml" title="nixCraft &raquo; Linux Set Date and Time From a Command Prompt Comments Feed" href="http://www.cyberciti.biz/faq/howto-set-date-time-from-linux-command-prompt/feed/" /><link
+rel="shortcut icon" href="http://www.cyberciti.biz/faq/wp-content/themes/thesis/lib/images/favicon.ico" /><!--
+	generated 300 seconds ago
+	generated in 0.404 seconds
+	served from batcache in 0.002 seconds
+	expires in 1200 seconds
+-->
+</head><body
+class="template-single"><div
+class="container"><center><script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>  <ins
+class="adsbygoogle"
+style="display:block"
+data-ad-client="ca-pub-7825705102693166"
+data-ad-slot="4167943066"
+data-ad-format="auto"></ins> <script>(adsbygoogle = window.adsbygoogle || []).push({});</script> </center> <br/> <span
+class="menu_control">≡ Menu</span><ul
+id="menu-faq" class="menu"><li
+id="menu-item-12752" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-home menu-item-has-children menu-item-12752"><a
+title="See all tutorials " href="http://www.cyberciti.biz/faq/">Tutorials</a><ul
+class="sub-menu"><li
+id="menu-item-12766" class="menu-item menu-item-type-taxonomy menu-item-object-category current-post-ancestor current-menu-parent current-post-parent menu-item-12766"><a
+href="http://www.cyberciti.biz/faq/category/bash-shell/">BASH Shell</a></li><li
+id="menu-item-12767" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-12767"><a
+href="http://www.cyberciti.biz/faq/category/troubleshooting/">Troubleshooting</a></li><li
+id="menu-item-12773" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-12773"><a
+href="http://www.cyberciti.biz/faq/category/nginx/">Nginx</a></li><li
+id="menu-item-12772" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-12772"><a
+href="http://www.cyberciti.biz/faq/category/networking/">Networking</a></li><li
+id="menu-item-12771" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-12771"><a
+href="http://www.cyberciti.biz/faq/category/mysql/">MySQL</a></li><li
+id="menu-item-13283" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-13283"><a
+href="http://www.cyberciti.biz/faq/category/google-cloud-platform/">Google Cloud Platform</a></li><li
+id="menu-item-13284" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-13284"><a
+href="http://www.cyberciti.biz/faq/category/aws-ec2-ebs-cloudfront/">Amazon Cloud Computing</a></li><li
+id="menu-item-13285" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-13285"><a
+href="http://www.cyberciti.biz/faq/category/rackspace-cloud-storage-server-cdnfiles/">Rackspace Cloud Computing</a></li><li
+id="menu-item-12758" class="menu-item menu-item-type-taxonomy menu-item-object-category current-post-ancestor current-menu-parent current-post-parent menu-item-has-children menu-item-12758"><a
+href="http://www.cyberciti.biz/faq/category/linux/">Linux</a><ul
+class="sub-menu"><li
+id="menu-item-12761" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-12761"><a
+href="http://www.cyberciti.biz/faq/category/centos/">CentOS</a></li><li
+id="menu-item-12759" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-12759"><a
+href="http://www.cyberciti.biz/faq/category/debian-ubuntu/">Debian / Ubuntu</a></li><li
+id="menu-item-12763" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-12763"><a
+href="http://www.cyberciti.biz/faq/category/ubuntu-linux/">Ubuntu Linux</a></li><li
+id="menu-item-12765" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-12765"><a
+href="http://www.cyberciti.biz/faq/category/suse/">Suse</a></li><li
+id="menu-item-12762" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-12762"><a
+href="http://www.cyberciti.biz/faq/category/redhat-and-friends/">RedHat and Friends</a></li><li
+id="menu-item-12775" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-12775"><a
+href="http://www.cyberciti.biz/faq/category/slackware-linux/">Slackware Linux</a></li></ul></li><li
+id="menu-item-12760" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-has-children menu-item-12760"><a
+href="http://www.cyberciti.biz/faq/category/unix/">UNIX</a><ul
+class="sub-menu"><li
+id="menu-item-12768" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-12768"><a
+href="http://www.cyberciti.biz/faq/category/aix/">AIX</a></li><li
+id="menu-item-12770" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-12770"><a
+href="http://www.cyberciti.biz/faq/category/mac-os-x/">Mac OS X</a></li><li
+id="menu-item-12764" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-12764"><a
+href="http://www.cyberciti.biz/faq/category/freebsd/">FreeBSD</a></li><li
+id="menu-item-12769" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-12769"><a
+href="http://www.cyberciti.biz/faq/category/freebsd-jails-vps/">FreeBSD Jails (VPS)</a></li><li
+id="menu-item-12774" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-12774"><a
+href="http://www.cyberciti.biz/faq/category/openbsd/">Openbsd</a></li><li
+id="menu-item-12776" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-12776"><a
+href="http://www.cyberciti.biz/faq/category/solaris/">Solaris</a></li></ul></li><li
+id="menu-item-12777" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-12777"><a
+href="http://www.cyberciti.biz/faq/category-archives/">See all tutorial topics</a></li></ul></li><li
+id="menu-item-12756" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-12756"><a
+title="Contact us via email " href="http://www.cyberciti.biz/tips/contact-us">Contact us</a></li><li
+id="menu-item-13504" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-13504"><a
+title="Linux Shell Scripting Tutorial" href="http://bash.cyberciti.biz/guide/Main_Page">Linux Scripting Guide</a></li><li
+id="menu-item-12753" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-12753"><a
+title="Get updated via RSS feed." href="http://www.cyberciti.biz/nixcraft-rss-feed-syndication/">RSS/FEED</a></li><li
+id="menu-item-145032" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-145032"><a
+title="Support us when you shop @ Amazon.com" href="http://www.amazon.com/Best-Sellers-Computers-Accessories/zgbs/pc/?_encoding=UTF8&#038;camp=1789&#038;creative=390957&#038;linkCode=ur2&#038;tag=cyberciti-20&#038;linkId=HATL67HUDAMECZYF">Shop</a></li></ul><div
+id="header" class="header"><div
+id="site_title"><a
+href="http://www.cyberciti.biz/faq">nixCraft</a></div><div
+id="site_tagline">Linux and Unix tutorials for new and seasoned sysadmin.</div></div><div
+class="columns"><div
+class="content"><div
+id="post-371" class="post_box grt top" itemscope itemtype="http://schema.org/Article"><div
+class="headline_area"><h1 class="headline" itemprop="name">Linux Set Date and Time From a Command Prompt</h1><div
+class="byline small"> <span
+class="post_author_intro">by</span> <span
+class="post_author" itemprop="author">Vivek Gite</span><meta
+itemprop="datePublished" content="2006-10-02" /><meta
+itemprop="dateModified" content="2014-04-23" /> <span
+class="post_date_intro">on</span> <span
+class="post_date" title="2006-10-02">October 2, 2006</span></div></div><div
+class="post_content" itemprop="articleBody"><p><div
+class="my_story"><a
+title="See all GNU/Linux related FAQ" href="http://www.cyberciti.biz/faq/category/linux/"><img
+src="http://s0.cyberciti.org/images/category/old/linux-logo.png" alt="" border="0" /></a></div><span
+class="drop_cap">H</span>ow can I set the system date and time from the command prompt (bash shell)? I don't have GUI installed and I am login over ssh session. How can I set date under Linux operating systems?<br
+/> <span
+id="more-371"></span><br
+/> Use the date command to display the current date and time or set the system date / time over ssh session. You can also run the date command from X terminal as root user.</p><p><div
+style="float:right;margin-top:0px;margin-left:5px;"><table
+cellspacing="0" class="postbox"><tr><th>Tutorial details</th><th></th></tr><tr><td>Difficulty</td><td><a
+href="http://www.cyberciti.biz/faq/tutorial-difficulty-level/easy/" title="See all Easy Linux / Unix System Administrator Tutorials">Easy</a> (<a
+href="http://www.cyberciti.biz/faq/tutorial-difficulty-level/easy/feed/" title="See all Easy Linux / Unix System Administrator Tutorials via rss feed">rss</a>)</td></tr><tr
+class="even"><td>Root privileges</td><td><a
+href="http://www.cyberciti.biz/faq/how-can-i-log-in-as-root/" title="See how to login as root user">Yes</a></td></tr><tr><td>Requirements</td><td>None</td></tr><tr
+class="even"><td>Estimated completion time</td><td>2m</td></tr></table></div>This is useful if the Linux server time and/or date is wrong, and you need to set it to new values from the shell prompt.</p><p>You must login as root user to use date command.</p><h2>Linux Display Current Data and Time</h2><p>Just type the date command:<br
+/> <code>$ date</code><br
+/> Sample outputs:</p><pre>Wed Apr 23 10:32:59 CDT 2014</pre><h2>Linux Display The Hardware Clock (RTC)</h2><p>Type the following hwclock command to read the  Hardware Clock and display the time on screen:<br
+/> <code># hwclock -r</code><br
+/> OR<br
+/> <code># hwclock --show</code><br
+/> OR show it in Coordinated Universal time (UTC):<br
+/> <code># hwclock --show --utc</code><br
+/> Sample outputs:</p><pre>Wed 23 Apr 2014 10:36:23 AM CDT  -0.157239 seconds</pre><h2>Linux Set Date Command Example</h2><p>Use the following syntax to set new data and time:</p><pre class="bash">&nbsp;
+<span style="color: #c20cb9; font-weight: bold;">date</span> --<span style="color: #007800;">set=</span><span style="color: #ff0000;">&quot;STRING&quot;</span>
+&nbsp;</pre><p>For example, set new data to 2 Oct 2006 18:00:00, type the following command as root user:<br
+/> <code># date -s "2 OCT 2006 18:00:00"</code><br
+/> OR<br
+/> <code># date --set="2 OCT 2006 18:00:00"</code><br
+/> You can also simplify format using following syntax:<br
+/> <code># date +%Y%m%d -s "20081128"</code></p><h3>Linux Set Time Examples</h3><p>To set time use the following syntax:<br
+/> <code># date +%T -s "10:13:13"</code><br
+/> Where,</p><ul><li>10: Hour (hh)</li><li>13: Minute (mm)</li><li>13: Second  (ss)</li></ul><p>Use %p locale's equivalent of either AM or PM, enter:<br
+/> <code># date +%T%p -s "6:10:30AM"<br
+/> # date +%T%p -s "12:10:30PM"</code></p><h3>How do I set the Hardware Clock to the current System Time?</h3><p>Use the following syntax:<br
+/> <code># hwclock --systohc</code><br
+/> OR<br
+/> <code># hwclock -w</code></p><h5>See also:</h5><ul><li>You can also set new timzone using this <a
+href="http://www.cyberciti.biz/faq/howto-linux-unix-change-setup-timezone-tz-variable/">mini-howto</a>.</li><li>Man pages - <a
+title='See hwclock(8) linux man page for more information and examples' href='http://www.manpager.com/linux/man8/hwclock.8.html'>hwclock(8)</a>, <a
+title='See date(1) linux man page for more information and examples' href='http://www.manpager.com/linux/man1/date.1.html'>date(1)</a></li></ul> <a
+class="btn btn-tweet" href="https://twitter.com/intent/tweet?text=Linux+Set+Date+and+Time+From+a+Command+Prompt&url=http://www.cyberciti.biz/faq/howto-set-date-time-from-linux-command-prompt/&via=nixcraft" title="Tweet this tutorial/page">Tweet it</a><a
+class="btn btn-facebook" href="https://www.facebook.com/sharer/sharer.php?u=http://www.cyberciti.biz/faq/howto-set-date-time-from-linux-command-prompt/" title="Share this page/tutorial on Facebook">Facebook it</a><a
+class="btn btn-google" href="https://plus.google.com/share?url=http://www.cyberciti.biz/faq/howto-set-date-time-from-linux-command-prompt/" title="Share this page/tutorial on Google+">Google+ it</a><a
+class="btn btn-pdf" href="http://www.cyberciti.biz/view/pdf/faq/371.php" title="Download this tutorial/faq as a free pdf">PDF it</a><a
+class="btn btn-typoerr" href="https://nixcraft.wufoo.com/forms/give-us-feedback-for-nixcraft/def/Field209=http://www.cyberciti.biz/faq/howto-set-date-time-from-linux-command-prompt/&Field211=Linux Set Date and Time From a Command Prompt" target="_blank" title="Click here to report Typo/Grammer and other Incorrect information">Found an error/typo on this page?</a></div></div><div
+id="comments"><p
+class="comments_intro"><span
+class="bracket">{</span> <span
+class="num_comments">136</span> comments&#8230; <a
+href="#commentform" rel="nofollow">add one</a> <span
+class="bracket">}</span></p><ul
+class="comment_list"><li
+class="comment even thread-even depth-1" id="comment-27785"><div
+class="comment_head"> <span
+class="comment_author">Johan Dalevi</span> <span
+class="comment_date">April 8, 2007, 8:51 pm</span></div><div
+class="comment_text grt" id="comment-body-27785"><p>Found out i had to set the date like this:<br
+/> # date -s 2007.04.08-22:46+0000</p></div><div
+class="comment_footer"> <a
+class='comment-reply-link' href='/faq/howto-set-date-time-from-linux-command-prompt/?replytocom=27785#commentform' onclick='return addComment.moveForm( "comment-body-27785", "27785", "commentform", "371" )' aria-label='Reply to Johan Dalevi'>Reply</a> <a
+class="comment_permalink" href="#comment-27785" title="permalink to this comment" rel="nofollow">Link</a></div><ul
+class="children"><li
+class="comment odd alt depth-2" id="comment-53005"><div
+class="comment_head"> <span
+class="comment_author">PRADEEP</span> <span
+class="comment_date">December 20, 2010, 3:19 am</span></div><div
+class="comment_text grt" id="comment-body-53005"><p>date -s &#8220;2 OCT 2006 18:00:00&#8243;</p></div><div
+class="comment_footer"> <a
+class='comment-reply-link' href='/faq/howto-set-date-time-from-linux-command-prompt/?replytocom=53005#commentform' onclick='return addComment.moveForm( "comment-body-53005", "53005", "commentform", "371" )' aria-label='Reply to PRADEEP'>Reply</a> <a
+class="comment_permalink" href="#comment-53005" title="permalink to this comment" rel="nofollow">Link</a></div></li><li
+class="comment even depth-2" id="comment-238325"><div
+class="comment_head"> <span
+class="comment_author">Edward biney</span> <span
+class="comment_date">August 2, 2014, 3:55 pm</span></div><div
+class="comment_text grt" id="comment-body-238325"><p>I want to set the date and time on my phone</p></div><div
+class="comment_footer"> <a
+class='comment-reply-link' href='/faq/howto-set-date-time-from-linux-command-prompt/?replytocom=238325#commentform' onclick='return addComment.moveForm( "comment-body-238325", "238325", "commentform", "371" )' aria-label='Reply to Edward biney'>Reply</a> <a
+class="comment_permalink" href="#comment-238325" title="permalink to this comment" rel="nofollow">Link</a></div></li></ul></li><li
+class="comment odd alt thread-odd thread-alt depth-1" id="comment-37151"><div
+class="comment_head"> <span
+class="comment_author">mani</span> <span
+class="comment_date">December 12, 2007, 6:57 am</span></div><div
+class="comment_text grt" id="comment-body-37151"><p>How can I set the proxy setting from the command prompt (bash shell)?</p></div><div
+class="comment_footer"> <a
+class='comment-reply-link' href='/faq/howto-set-date-time-from-linux-command-prompt/?replytocom=37151#commentform' onclick='return addComment.moveForm( "comment-body-37151", "37151", "commentform", "371" )' aria-label='Reply to mani'>Reply</a> <a
+class="comment_permalink" href="#comment-37151" title="permalink to this comment" rel="nofollow">Link</a></div></li><li
+class="comment even thread-even depth-1" id="comment-37290"><div
+class="comment_head"> <span
+class="comment_author">raju</span> <span
+class="comment_date">January 10, 2008, 7:25 am</span></div><div
+class="comment_text grt" id="comment-body-37290"><p>Just This code is ultimate.It is simple and worth full.Thank you very much providing help to people.</p></div><div
+class="comment_footer"> <a
+class='comment-reply-link' href='/faq/howto-set-date-time-from-linux-command-prompt/?replytocom=37290#commentform' onclick='return addComment.moveForm( "comment-body-37290", "37290", "commentform", "371" )' aria-label='Reply to raju'>Reply</a> <a
+class="comment_permalink" href="#comment-37290" title="permalink to this comment" rel="nofollow">Link</a></div></li><li
+class="comment odd alt thread-odd thread-alt depth-1" id="comment-37591"><div
+class="comment_head"> <span
+class="comment_author">kiran</span> <span
+class="comment_date">March 8, 2008, 4:26 am</span></div><div
+class="comment_text grt" id="comment-body-37591"><p>It Work&#8217;s Thanks a Lot,</p><p>Kiran.</p></div><div
+class="comment_footer"> <a
+class='comment-reply-link' href='/faq/howto-set-date-time-from-linux-command-prompt/?replytocom=37591#commentform' onclick='return addComment.moveForm( "comment-body-37591", "37591", "commentform", "371" )' aria-label='Reply to kiran'>Reply</a> <a
+class="comment_permalink" href="#comment-37591" title="permalink to this comment" rel="nofollow">Link</a></div><ul
+class="children"><li
+class="comment even depth-2" id="comment-49344"><div
+class="comment_head"> <span
+class="comment_author">varun</span> <span
+class="comment_date">September 8, 2010, 12:26 pm</span></div><div
+class="comment_text grt" id="comment-body-49344"><p>thank</p></div><div
+class="comment_footer"> <a
+class='comment-reply-link' href='/faq/howto-set-date-time-from-linux-command-prompt/?replytocom=49344#commentform' onclick='return addComment.moveForm( "comment-body-49344", "49344", "commentform", "371" )' aria-label='Reply to varun'>Reply</a> <a
+class="comment_permalink" href="#comment-49344" title="permalink to this comment" rel="nofollow">Link</a></div></li></ul></li><li
+class="comment odd alt thread-even depth-1" id="comment-37960"><div
+class="comment_head"> <span
+class="comment_author">djeikyb</span> <span
+class="comment_date">May 21, 2008, 12:18 am</span></div><div
+class="comment_text grt" id="comment-body-37960"><p>mani&#8211; run:<br
+/> export http_proxy=&#8217;http://10.10.1.2:3128&#8242;</p></div><div
+class="comment_footer"> <a
+class='comment-reply-link' href='/faq/howto-set-date-time-from-linux-command-prompt/?replytocom=37960#commentform' onclick='return addComment.moveForm( "comment-body-37960", "37960", "commentform", "371" )' aria-label='Reply to djeikyb'>Reply</a> <a
+class="comment_permalink" href="#comment-37960" title="permalink to this comment" rel="nofollow">Link</a></div></li><li
+class="comment even thread-odd thread-alt depth-1" id="comment-38155"><div
+class="comment_head"> <span
+class="comment_author">R.K.Majhi</span> <span
+class="comment_date">June 24, 2008, 1:29 pm</span></div><div
+class="comment_text grt" id="comment-body-38155"><p>It helped me to change the server timings without any difficulty. I tried to get help from the command prompt but it didn&#8217;t render anything. Thanks for the solution.</p></div><div
+class="comment_footer"> <a
+class='comment-reply-link' href='/faq/howto-set-date-time-from-linux-command-prompt/?replytocom=38155#commentform' onclick='return addComment.moveForm( "comment-body-38155", "38155", "commentform", "371" )' aria-label='Reply to R.K.Majhi'>Reply</a> <a
+class="comment_permalink" href="#comment-38155" title="permalink to this comment" rel="nofollow">Link</a></div></li><li
+class="comment odd alt thread-even depth-1" id="comment-38181"><div
+class="comment_head"> <span
+class="comment_author">Mohit Guleria</span> <span
+class="comment_date">June 27, 2008, 5:08 pm</span></div><div
+class="comment_text grt" id="comment-body-38181"><p>Do check and sync hardware clock with:<br
+/> # hwclock &#8211;show<br
+/> # hwclock &#8211;systohc</p></div><div
+class="comment_footer"> <a
+class='comment-reply-link' href='/faq/howto-set-date-time-from-linux-command-prompt/?replytocom=38181#commentform' onclick='return addComment.moveForm( "comment-body-38181", "38181", "commentform", "371" )' aria-label='Reply to Mohit Guleria'>Reply</a> <a
+class="comment_permalink" href="#comment-38181" title="permalink to this comment" rel="nofollow">Link</a></div><ul
+class="children"><li
+class="comment even depth-2" id="comment-81391"><div
+class="comment_head"> <span
+class="comment_author">Maurice</span> <span
+class="comment_date">March 6, 2013, 6:38 am</span></div><div
+class="comment_text grt" id="comment-body-81391"><p>This is actually an important one!! Many thanks!</p></div><div
+class="comment_footer"> <a
+class='comment-reply-link' href='/faq/howto-set-date-time-from-linux-command-prompt/?replytocom=81391#commentform' onclick='return addComment.moveForm( "comment-body-81391", "81391", "commentform", "371" )' aria-label='Reply to Maurice'>Reply</a> <a
+class="comment_permalink" href="#comment-81391" title="permalink to this comment" rel="nofollow">Link</a></div></li><li
+class="comment odd alt depth-2" id="comment-138576"><div
+class="comment_head"> <span
+class="comment_author">bryan</span> <span
+class="comment_date">April 23, 2014, 2:05 pm</span></div><div
+class="comment_text grt" id="comment-body-138576"><p>Thanks a ton Mohit, this is what i was looking for.</p></div><div
+class="comment_footer"> <a
+class='comment-reply-link' href='/faq/howto-set-date-time-from-linux-command-prompt/?replytocom=138576#commentform' onclick='return addComment.moveForm( "comment-body-138576", "138576", "commentform", "371" )' aria-label='Reply to bryan'>Reply</a> <a
+class="comment_permalink" href="#comment-138576" title="permalink to this comment" rel="nofollow">Link</a></div></li></ul></li><li
+class="comment even thread-odd thread-alt depth-1" id="comment-38389"><div
+class="comment_head"> <span
+class="comment_author">Paolo</span> <span
+class="comment_date">July 24, 2008, 12:16 pm</span></div><div
+class="comment_text grt" id="comment-body-38389"><p>This configuration string is exactly what i&#8217;m searching for. thanks.</p></div><div
+class="comment_footer"> <a
+class='comment-reply-link' href='/faq/howto-set-date-time-from-linux-command-prompt/?replytocom=38389#commentform' onclick='return addComment.moveForm( "comment-body-38389", "38389", "commentform", "371" )' aria-label='Reply to Paolo'>Reply</a> <a
+class="comment_permalink" href="#comment-38389" title="permalink to this comment" rel="nofollow">Link</a></div></li><li
+class="comment odd alt thread-even depth-1" id="comment-38436"><div
+class="comment_head"> <span
+class="comment_author">job wakhungu</span> <span
+class="comment_date">July 30, 2008, 4:49 pm</span></div><div
+class="comment_text grt" id="comment-body-38436"><p>i had to set the date by using {date -s &#8220;wed jul 30 19:41:00 BST 2008&#8243;} while at the root.</p></div><div
+class="comment_footer"> <a
+class='comment-reply-link' href='/faq/howto-set-date-time-from-linux-command-prompt/?replytocom=38436#commentform' onclick='return addComment.moveForm( "comment-body-38436", "38436", "commentform", "371" )' aria-label='Reply to job wakhungu'>Reply</a> <a
+class="comment_permalink" href="#comment-38436" title="permalink to this comment" rel="nofollow">Link</a></div></li><li
+class="comment even thread-odd thread-alt depth-1" id="comment-38558"><div
+class="comment_head"> <span
+class="comment_author">gujubhai</span> <span
+class="comment_date">August 13, 2008, 9:43 am</span></div><div
+class="comment_text grt" id="comment-body-38558"><p>hey thanks a million,<br
+/> this worked right the first time&#8230;</p><p>was wondering how to do it untill i found ur site&#8230;</p><p>keep up the good work&#8230;very neat for freshers to *nix</p><p>cheers</p></div><div
+class="comment_footer"> <a
+class='comment-reply-link' href='/faq/howto-set-date-time-from-linux-command-prompt/?replytocom=38558#commentform' onclick='return addComment.moveForm( "comment-body-38558", "38558", "commentform", "371" )' aria-label='Reply to gujubhai'>Reply</a> <a
+class="comment_permalink" href="#comment-38558" title="permalink to this comment" rel="nofollow">Link</a></div></li><li
+class="comment odd alt thread-even depth-1" id="comment-38605"><div
+class="comment_head"> <span
+class="comment_author">rostiarso</span> <span
+class="comment_date">August 21, 2008, 3:41 am</span></div><div
+class="comment_text grt" id="comment-body-38605"><p>You could also simplify the format of input date as example below<br
+/> <code>date +%Y%m%d -s "20080817"</code> (set new date to August 17, 2008) without typing full date format</p></div><div
+class="comment_footer"> <a
+class='comment-reply-link' href='/faq/howto-set-date-time-from-linux-command-prompt/?replytocom=38605#commentform' onclick='return addComment.moveForm( "comment-body-38605", "38605", "commentform", "371" )' aria-label='Reply to rostiarso'>Reply</a> <a
+class="comment_permalink" href="#comment-38605" title="permalink to this comment" rel="nofollow">Link</a></div></li><li
+class="comment even thread-odd thread-alt depth-1" id="comment-39057"><div
+class="comment_head"> <span
+class="comment_author">Abdussami</span> <span
+class="comment_date">October 26, 2008, 11:35 am</span></div><div
+class="comment_text grt" id="comment-body-39057"><p>Just amazing command&#8230; &amp; help.. gr88 work.. keep it up.</p><p>May allah bless you&#8230;</p></div><div
+class="comment_footer"> <a
+class='comment-reply-link' href='/faq/howto-set-date-time-from-linux-command-prompt/?replytocom=39057#commentform' onclick='return addComment.moveForm( "comment-body-39057", "39057", "commentform", "371" )' aria-label='Reply to Abdussami'>Reply</a> <a
+class="comment_permalink" href="#comment-39057" title="permalink to this comment" rel="nofollow">Link</a></div></li><li
+class="comment odd alt thread-even depth-1" id="comment-39065"><div
+class="comment_head"> <span
+class="comment_author">marius</span> <span
+class="comment_date">October 27, 2008, 7:07 pm</span></div><div
+class="comment_text grt" id="comment-body-39065"><p>thank you!!!!</p><p>i have fedora 9 i can not change the time using his time control application. he ask for my root password, and then he says that it is not correct&#8230;. crazy program :)</p><p>the man page of date did not showed me any example, i what i tried was not accepted.</p><p>thank you.</p></div><div
+class="comment_footer"> <a
+class='comment-reply-link' href='/faq/howto-set-date-time-from-linux-command-prompt/?replytocom=39065#commentform' onclick='return addComment.moveForm( "comment-body-39065", "39065", "commentform", "371" )' aria-label='Reply to marius'>Reply</a> <a
+class="comment_permalink" href="#comment-39065" title="permalink to this comment" rel="nofollow">Link</a></div></li><li
+class="comment even thread-odd thread-alt depth-1" id="comment-39100"><div
+class="comment_head"> <span
+class="comment_author">D</span> <span
+class="comment_date">November 2, 2008, 10:09 am</span></div><div
+class="comment_text grt" id="comment-body-39100"><p>Thanks</p></div><div
+class="comment_footer"> <a
+class='comment-reply-link' href='/faq/howto-set-date-time-from-linux-command-prompt/?replytocom=39100#commentform' onclick='return addComment.moveForm( "comment-body-39100", "39100", "commentform", "371" )' aria-label='Reply to D'>Reply</a> <a
+class="comment_permalink" href="#comment-39100" title="permalink to this comment" rel="nofollow">Link</a></div></li><li
+class="comment odd alt thread-even depth-1" id="comment-39145"><div
+class="comment_head"> <span
+class="comment_author">pramod</span> <span
+class="comment_date">November 7, 2008, 4:11 am</span></div><div
+class="comment_text grt" id="comment-body-39145"><p>this is gr8<br
+/> I synced HW clk with sysstem clock also.<br
+/> But after reboot the time is again changed</p></div><div
+class="comment_footer"> <a
+class='comment-reply-link' href='/faq/howto-set-date-time-from-linux-command-prompt/?replytocom=39145#commentform' onclick='return addComment.moveForm( "comment-body-39145", "39145", "commentform", "371" )' aria-label='Reply to pramod'>Reply</a> <a
+class="comment_permalink" href="#comment-39145" title="permalink to this comment" rel="nofollow">Link</a></div></li><li
+class="comment even thread-odd thread-alt depth-1" id="comment-39324"><div
+class="comment_head"> <span
+class="comment_author">Frank Haynes</span> <span
+class="comment_date">November 27, 2008, 6:35 pm</span></div><div
+class="comment_text grt" id="comment-body-39324"><p>The man page for the &#8216;date&#8217; command is WORTHLESS.</p><p>Now that I read here how to format the input string in order to set the clock my life is good. THANK YOU!</p></div><div
+class="comment_footer"> <a
+class='comment-reply-link' href='/faq/howto-set-date-time-from-linux-command-prompt/?replytocom=39324#commentform' onclick='return addComment.moveForm( "comment-body-39324", "39324", "commentform", "371" )' aria-label='Reply to Frank Haynes'>Reply</a> <a
+class="comment_permalink" href="#comment-39324" title="permalink to this comment" rel="nofollow">Link</a></div></li><li
+class="comment odd alt thread-even depth-1" id="comment-39330"><div
+class="comment_head"> <span
+class="comment_author">saiph savage</span> <span
+class="comment_date">November 28, 2008, 3:22 pm</span></div><div
+class="comment_text grt" id="comment-body-39330"><p>thanks !<br
+/> very nice article, super easy :)</p></div><div
+class="comment_footer"> <a
+class='comment-reply-link' href='/faq/howto-set-date-time-from-linux-command-prompt/?replytocom=39330#commentform' onclick='return addComment.moveForm( "comment-body-39330", "39330", "commentform", "371" )' aria-label='Reply to saiph savage'>Reply</a> <a
+class="comment_permalink" href="#comment-39330" title="permalink to this comment" rel="nofollow">Link</a></div></li><li
+class="comment even thread-odd thread-alt depth-1" id="comment-39509"><div
+class="comment_head"> <span
+class="comment_author">Venu Reddy</span> <span
+class="comment_date">December 18, 2008, 6:35 am</span></div><div
+class="comment_text grt" id="comment-body-39509"><p>Thanks brother,<br
+/> It has worked. Great work&#8230;!</p></div><div
+class="comment_footer"> <a
+class='comment-reply-link' href='/faq/howto-set-date-time-from-linux-command-prompt/?replytocom=39509#commentform' onclick='return addComment.moveForm( "comment-body-39509", "39509", "commentform", "371" )' aria-label='Reply to Venu Reddy'>Reply</a> <a
+class="comment_permalink" href="#comment-39509" title="permalink to this comment" rel="nofollow">Link</a></div></li><li
+class="comment odd alt thread-even depth-1" id="comment-39567"><div
+class="comment_head"> <span
+class="comment_author">Neelesh</span> <span
+class="comment_date">December 22, 2008, 2:04 pm</span></div><div
+class="comment_text grt" id="comment-body-39567"><p>date set=&#8221;2 OCT 2006 18:00:00&#8243;</p><p>it is doesn&#8217;t work.<br
+/> I have to change my linux system time./ Right now it is shows correct time on my machine but when i open my gmail account it&#8217;s shows wrong time of my emails.Due to it&#8217;s system time.</p><p>Any idea?</p></div><div
+class="comment_footer"> <a
+class='comment-reply-link' href='/faq/howto-set-date-time-from-linux-command-prompt/?replytocom=39567#commentform' onclick='return addComment.moveForm( "comment-body-39567", "39567", "commentform", "371" )' aria-label='Reply to Neelesh'>Reply</a> <a
+class="comment_permalink" href="#comment-39567" title="permalink to this comment" rel="nofollow">Link</a></div></li><li
+class="comment even thread-odd thread-alt depth-1" id="comment-39945"><div
+class="comment_head"> <span
+class="comment_author">Dennis Quek</span> <span
+class="comment_date">January 21, 2009, 5:10 am</span></div><div
+class="comment_text grt" id="comment-body-39945"><p>Anyone has ideas how to set Dates 1 day or 2 dates ago. What about setting it +2 hours in advance etc ?</p></div><div
+class="comment_footer"> <a
+class='comment-reply-link' href='/faq/howto-set-date-time-from-linux-command-prompt/?replytocom=39945#commentform' onclick='return addComment.moveForm( "comment-body-39945", "39945", "commentform", "371" )' aria-label='Reply to Dennis Quek'>Reply</a> <a
+class="comment_permalink" href="#comment-39945" title="permalink to this comment" rel="nofollow">Link</a></div></li><li
+class="comment odd alt thread-even depth-1" id="comment-40238"><div
+class="comment_head"> <span
+class="comment_author">Nickalf</span> <span
+class="comment_date">February 11, 2009, 7:49 pm</span></div><div
+class="comment_text grt" id="comment-body-40238"><p>Hi All,</p><p>The problem I&#8217;m having is, the time/date changes at the time I do it, but doesn&#8217;t hold after a reboot &#8211; how can i lock it into the Server&#8217;s clock..</p><p>Neelesh &#8211;  Try <i><b>date -s ”2 OCT 2006 18:00:00″</b></i> instead</p><p>Nickalf. . .</p></div><div
+class="comment_footer"> <a
+class='comment-reply-link' href='/faq/howto-set-date-time-from-linux-command-prompt/?replytocom=40238#commentform' onclick='return addComment.moveForm( "comment-body-40238", "40238", "commentform", "371" )' aria-label='Reply to Nickalf'>Reply</a> <a
+class="comment_permalink" href="#comment-40238" title="permalink to this comment" rel="nofollow">Link</a></div><ul
+class="children"><li
+class="comment even depth-2" id="comment-62092"><div
+class="comment_head"> <span
+class="comment_author">Aman</span> <span
+class="comment_date">September 2, 2011, 5:58 am</span></div><div
+class="comment_text grt" id="comment-body-62092"><p>date &#8211;set=&#8221;2 sep 2011 11:27:20&#8243;</p></div><div
+class="comment_footer"> <a
+class='comment-reply-link' href='/faq/howto-set-date-time-from-linux-command-prompt/?replytocom=62092#commentform' onclick='return addComment.moveForm( "comment-body-62092", "62092", "commentform", "371" )' aria-label='Reply to Aman'>Reply</a> <a
+class="comment_permalink" href="#comment-62092" title="permalink to this comment" rel="nofollow">Link</a></div></li><li
+class="comment odd alt depth-2" id="comment-68259"><div
+class="comment_head"> <span
+class="comment_author">zia</span> <span
+class="comment_date">March 6, 2012, 3:02 am</span></div><div
+class="comment_text grt" id="comment-body-68259"><p>date -s ”2 OCT 2006 18:00:00″   Thanks it worked nicely oh! thanks</p></div><div
+class="comment_footer"> <a
+class='comment-reply-link' href='/faq/howto-set-date-time-from-linux-command-prompt/?replytocom=68259#commentform' onclick='return addComment.moveForm( "comment-body-68259", "68259", "commentform", "371" )' aria-label='Reply to zia'>Reply</a> <a
+class="comment_permalink" href="#comment-68259" title="permalink to this comment" rel="nofollow">Link</a></div></li></ul></li><li
+class="comment even thread-odd thread-alt depth-1" id="comment-40329"><div
+class="comment_head"> <span
+class="comment_author">Adnan</span> <span
+class="comment_date">February 17, 2009, 9:01 am</span></div><div
+class="comment_text grt" id="comment-body-40329"><p>Thanx alot.. working properly</p></div><div
+class="comment_footer"> <a
+class='comment-reply-link' href='/faq/howto-set-date-time-from-linux-command-prompt/?replytocom=40329#commentform' onclick='return addComment.moveForm( "comment-body-40329", "40329", "commentform", "371" )' aria-label='Reply to Adnan'>Reply</a> <a
+class="comment_permalink" href="#comment-40329" title="permalink to this comment" rel="nofollow">Link</a></div></li><li
+class="comment odd alt thread-even depth-1" id="comment-40456"><div
+class="comment_head"> <span
+class="comment_author">Bimlesh sharma</span> <span
+class="comment_date">February 24, 2009, 11:28 am</span></div><div
+class="comment_text grt" id="comment-body-40456"><p>date -s ”2 OCT 2006 18:00:00″ is set for the time being. Need o set CMOS clock using &#8220;<b>hwclock</b>&#8221; command. That will be right solution.</p></div><div
+class="comment_footer"> <a
+class='comment-reply-link' href='/faq/howto-set-date-time-from-linux-command-prompt/?replytocom=40456#commentform' onclick='return addComment.moveForm( "comment-body-40456", "40456", "commentform", "371" )' aria-label='Reply to Bimlesh sharma'>Reply</a> <a
+class="comment_permalink" href="#comment-40456" title="permalink to this comment" rel="nofollow">Link</a></div></li><li
+class="comment even thread-odd thread-alt depth-1" id="comment-40585"><div
+class="comment_head"> <span
+class="comment_author">C Chavez</span> <span
+class="comment_date">March 3, 2009, 9:41 pm</span></div><div
+class="comment_text grt" id="comment-body-40585"><p>SIDE NOTE RE: SETTING HWCLOCK</p><p>format should be:</p><p># hwclock &#8211;systohc</p><p>(note double -)</p><p>CHeers!</p></div><div
+class="comment_footer"> <a
+class='comment-reply-link' href='/faq/howto-set-date-time-from-linux-command-prompt/?replytocom=40585#commentform' onclick='return addComment.moveForm( "comment-body-40585", "40585", "commentform", "371" )' aria-label='Reply to C Chavez'>Reply</a> <a
+class="comment_permalink" href="#comment-40585" title="permalink to this comment" rel="nofollow">Link</a></div></li><li
+class="comment odd alt thread-even depth-1" id="comment-40800"><div
+class="comment_head"> <span
+class="comment_author">George</span> <span
+class="comment_date">March 18, 2009, 5:57 am</span></div><div
+class="comment_text grt" id="comment-body-40800"><p>Thanks alot</p><p>THis has worked like yesterday</p><p>Keep up the good work.</p><p>Regards,</p><p>George Ndung&#8217;u<br
+/> IT &amp; Logistics Manager<br
+/> LSHS</p></div><div
+class="comment_footer"> <a
+class='comment-reply-link' href='/faq/howto-set-date-time-from-linux-command-prompt/?replytocom=40800#commentform' onclick='return addComment.moveForm( "comment-body-40800", "40800", "commentform", "371" )' aria-label='Reply to George'>Reply</a> <a
+class="comment_permalink" href="#comment-40800" title="permalink to this comment" rel="nofollow">Link</a></div></li><li
+class="comment even thread-odd thread-alt depth-1" id="comment-40836"><div
+class="comment_head"> <span
+class="comment_author">Ajay Shaldiwal</span> <span
+class="comment_date">March 20, 2009, 6:30 am</span></div><div
+class="comment_text grt" id="comment-body-40836"><p>Dear Sir,</p><p>Thanks a Lot.</p><p>Ajay</p></div><div
+class="comment_footer"> <a
+class='comment-reply-link' href='/faq/howto-set-date-time-from-linux-command-prompt/?replytocom=40836#commentform' onclick='return addComment.moveForm( "comment-body-40836", "40836", "commentform", "371" )' aria-label='Reply to Ajay Shaldiwal'>Reply</a> <a
+class="comment_permalink" href="#comment-40836" title="permalink to this comment" rel="nofollow">Link</a></div></li><li
+class="comment odd alt thread-even depth-1" id="comment-41479"><div
+class="comment_head"> <span
+class="comment_author">Mister D</span> <span
+class="comment_date">May 5, 2009, 9:17 am</span></div><div
+class="comment_text grt" id="comment-body-41479"><p>Thanks!!!</p></div><div
+class="comment_footer"> <a
+class='comment-reply-link' href='/faq/howto-set-date-time-from-linux-command-prompt/?replytocom=41479#commentform' onclick='return addComment.moveForm( "comment-body-41479", "41479", "commentform", "371" )' aria-label='Reply to Mister D'>Reply</a> <a
+class="comment_permalink" href="#comment-41479" title="permalink to this comment" rel="nofollow">Link</a></div></li><li
+class="comment even thread-odd thread-alt depth-1" id="comment-41487"><div
+class="comment_head"> <span
+class="comment_author">Gopal</span> <span
+class="comment_date">May 5, 2009, 5:59 pm</span></div><div
+class="comment_text grt" id="comment-body-41487"><p>One more thank you for your simple explanation and great example. I couldn&#8217;t figure out the format from reading the date man page.</p></div><div
+class="comment_footer"> <a
+class='comment-reply-link' href='/faq/howto-set-date-time-from-linux-command-prompt/?replytocom=41487#commentform' onclick='return addComment.moveForm( "comment-body-41487", "41487", "commentform", "371" )' aria-label='Reply to Gopal'>Reply</a> <a
+class="comment_permalink" href="#comment-41487" title="permalink to this comment" rel="nofollow">Link</a></div></li><li
+class="comment odd alt thread-even depth-1" id="comment-41609"><div
+class="comment_head"> <span
+class="comment_author">Zahid</span> <span
+class="comment_date">May 14, 2009, 12:26 pm</span></div><div
+class="comment_text grt" id="comment-body-41609"><p>Nice</p></div><div
+class="comment_footer"> <a
+class='comment-reply-link' href='/faq/howto-set-date-time-from-linux-command-prompt/?replytocom=41609#commentform' onclick='return addComment.moveForm( "comment-body-41609", "41609", "commentform", "371" )' aria-label='Reply to Zahid'>Reply</a> <a
+class="comment_permalink" href="#comment-41609" title="permalink to this comment" rel="nofollow">Link</a></div></li><li
+class="comment even thread-odd thread-alt depth-1" id="comment-41862"><div
+class="comment_head"> <span
+class="comment_author">cat</span> <span
+class="comment_date">June 1, 2009, 12:12 pm</span></div><div
+class="comment_text grt" id="comment-body-41862"><p>Thank you so much, it works.</p></div><div
+class="comment_footer"> <a
+class='comment-reply-link' href='/faq/howto-set-date-time-from-linux-command-prompt/?replytocom=41862#commentform' onclick='return addComment.moveForm( "comment-body-41862", "41862", "commentform", "371" )' aria-label='Reply to cat'>Reply</a> <a
+class="comment_permalink" href="#comment-41862" title="permalink to this comment" rel="nofollow">Link</a></div></li><li
+class="comment odd alt thread-even depth-1" id="comment-42043"><div
+class="comment_head"> <span
+class="comment_author">en</span> <span
+class="comment_date">June 13, 2009, 9:14 am</span></div><div
+class="comment_text grt" id="comment-body-42043"><p>Thank you! This information was very helpful.</p><p>Some of the examples you have presented here would be hard to derive from the <code>date</code> man page.</p></div><div
+class="comment_footer"> <a
+class='comment-reply-link' href='/faq/howto-set-date-time-from-linux-command-prompt/?replytocom=42043#commentform' onclick='return addComment.moveForm( "comment-body-42043", "42043", "commentform", "371" )' aria-label='Reply to en'>Reply</a> <a
+class="comment_permalink" href="#comment-42043" title="permalink to this comment" rel="nofollow">Link</a></div></li><li
+class="comment even thread-odd thread-alt depth-1" id="comment-42723"><div
+class="comment_head"> <span
+class="comment_author">Alan</span> <span
+class="comment_date">July 25, 2009, 9:20 pm</span></div><div
+class="comment_text grt" id="comment-body-42723"><p>I&#8217;ve just got a Datawind Ubisurfer and to set the date/time I had to type:<br
+/> # date 07252208002009<br
+/> 25 July 2009  time 20:08</p><p>decodes as # date MMDDhhmmssYYYY</p><p>month day hour minutes seconds year<br
+/> Thanks for other scripts they sent me in the right direction.<br
+/> (This does come up as UTC whatever that is!)</p></div><div
+class="comment_footer"> <a
+class='comment-reply-link' href='/faq/howto-set-date-time-from-linux-command-prompt/?replytocom=42723#commentform' onclick='return addComment.moveForm( "comment-body-42723", "42723", "commentform", "371" )' aria-label='Reply to Alan'>Reply</a> <a
+class="comment_permalink" href="#comment-42723" title="permalink to this comment" rel="nofollow">Link</a></div></li><li
+class="comment odd alt thread-even depth-1" id="comment-42988"><div
+class="comment_head"> <span
+class="comment_author">herMz</span> <span
+class="comment_date">August 10, 2009, 9:33 am</span></div><div
+class="comment_text grt" id="comment-body-42988"><p>this is awesome.. thnks a lot..</p></div><div
+class="comment_footer"> <a
+class='comment-reply-link' href='/faq/howto-set-date-time-from-linux-command-prompt/?replytocom=42988#commentform' onclick='return addComment.moveForm( "comment-body-42988", "42988", "commentform", "371" )' aria-label='Reply to herMz'>Reply</a> <a
+class="comment_permalink" href="#comment-42988" title="permalink to this comment" rel="nofollow">Link</a></div></li><li
+class="comment even thread-odd thread-alt depth-1" id="comment-43215"><div
+class="comment_head"> <span
+class="comment_author">Srini</span> <span
+class="comment_date">August 18, 2009, 2:01 pm</span></div><div
+class="comment_text grt" id="comment-body-43215"><p>Thanks&#8230;:)</p></div><div
+class="comment_footer"> <a
+class='comment-reply-link' href='/faq/howto-set-date-time-from-linux-command-prompt/?replytocom=43215#commentform' onclick='return addComment.moveForm( "comment-body-43215", "43215", "commentform", "371" )' aria-label='Reply to Srini'>Reply</a> <a
+class="comment_permalink" href="#comment-43215" title="permalink to this comment" rel="nofollow">Link</a></div></li><li
+class="comment odd alt thread-even depth-1" id="comment-43460"><div
+class="comment_head"> <span
+class="comment_author">FAHIM</span> <span
+class="comment_date">August 28, 2009, 3:48 pm</span></div><div
+class="comment_text grt" id="comment-body-43460"><p>Thanks its works&#8230;.!!!</p></div><div
+class="comment_footer"> <a
+class='comment-reply-link' href='/faq/howto-set-date-time-from-linux-command-prompt/?replytocom=43460#commentform' onclick='return addComment.moveForm( "comment-body-43460", "43460", "commentform", "371" )' aria-label='Reply to FAHIM'>Reply</a> <a
+class="comment_permalink" href="#comment-43460" title="permalink to this comment" rel="nofollow">Link</a></div></li><li
+class="comment even thread-odd thread-alt depth-1" id="comment-43581"><div
+class="comment_head"> <span
+class="comment_author">Dattatray Naik</span> <span
+class="comment_date">September 5, 2009, 7:42 am</span></div><div
+class="comment_text grt" id="comment-body-43581"><p>Thanks It Works.</p></div><div
+class="comment_footer"> <a
+class='comment-reply-link' href='/faq/howto-set-date-time-from-linux-command-prompt/?replytocom=43581#commentform' onclick='return addComment.moveForm( "comment-body-43581", "43581", "commentform", "371" )' aria-label='Reply to Dattatray Naik'>Reply</a> <a
+class="comment_permalink" href="#comment-43581" title="permalink to this comment" rel="nofollow">Link</a></div></li><li
+class="comment odd alt thread-even depth-1" id="comment-43590"><div
+class="comment_head"> <span
+class="comment_author">vignesh</span> <span
+class="comment_date">September 6, 2009, 7:03 am</span></div><div
+class="comment_text grt" id="comment-body-43590"><p>Thanks for giving the command.. It&#8217;s very helpful for me.</p></div><div
+class="comment_footer"> <a
+class='comment-reply-link' href='/faq/howto-set-date-time-from-linux-command-prompt/?replytocom=43590#commentform' onclick='return addComment.moveForm( "comment-body-43590", "43590", "commentform", "371" )' aria-label='Reply to vignesh'>Reply</a> <a
+class="comment_permalink" href="#comment-43590" title="permalink to this comment" rel="nofollow">Link</a></div></li><li
+class="comment even thread-odd thread-alt depth-1" id="comment-43621"><div
+class="comment_head"> <span
+class="comment_author">Murugesh</span> <span
+class="comment_date">September 8, 2009, 5:33 pm</span></div><div
+class="comment_text grt" id="comment-body-43621"><p>info date Examples</p></div><div
+class="comment_footer"> <a
+class='comment-reply-link' href='/faq/howto-set-date-time-from-linux-command-prompt/?replytocom=43621#commentform' onclick='return addComment.moveForm( "comment-body-43621", "43621", "commentform", "371" )' aria-label='Reply to Murugesh'>Reply</a> <a
+class="comment_permalink" href="#comment-43621" title="permalink to this comment" rel="nofollow">Link</a></div></li><li
+class="comment odd alt thread-even depth-1" id="comment-43707"><div
+class="comment_head"> <span
+class="comment_author">thomas</span> <span
+class="comment_date">September 16, 2009, 11:12 am</span></div><div
+class="comment_text grt" id="comment-body-43707"><p>I am a layman in linux, but this sure helped me change my server time remotely.thankyou.</p></div><div
+class="comment_footer"> <a
+class='comment-reply-link' href='/faq/howto-set-date-time-from-linux-command-prompt/?replytocom=43707#commentform' onclick='return addComment.moveForm( "comment-body-43707", "43707", "commentform", "371" )' aria-label='Reply to thomas'>Reply</a> <a
+class="comment_permalink" href="#comment-43707" title="permalink to this comment" rel="nofollow">Link</a></div></li><li
+class="comment even thread-odd thread-alt depth-1" id="comment-43834"><div
+class="comment_head"> <span
+class="comment_author">Kent</span> <span
+class="comment_date">September 25, 2009, 9:03 am</span></div><div
+class="comment_text grt" id="comment-body-43834"><p>Thanks C Chavez. I had a real time trying to get the hwclock to stop resetting. One line and BAM! Thanks again!</p></div><div
+class="comment_footer"> <a
+class='comment-reply-link' href='/faq/howto-set-date-time-from-linux-command-prompt/?replytocom=43834#commentform' onclick='return addComment.moveForm( "comment-body-43834", "43834", "commentform", "371" )' aria-label='Reply to Kent'>Reply</a> <a
+class="comment_permalink" href="#comment-43834" title="permalink to this comment" rel="nofollow">Link</a></div></li><li
+class="comment odd alt thread-even depth-1" id="comment-43913"><div
+class="comment_head"> <span
+class="comment_author">seth</span> <span
+class="comment_date">October 1, 2009, 2:18 pm</span></div><div
+class="comment_text grt" id="comment-body-43913"><p>THIS COMMAND DOESN&#8217;T WORK FOR OPEN BSD  TO CHANGE THE DATE AND TIME</p></div><div
+class="comment_footer"> <a
+class='comment-reply-link' href='/faq/howto-set-date-time-from-linux-command-prompt/?replytocom=43913#commentform' onclick='return addComment.moveForm( "comment-body-43913", "43913", "commentform", "371" )' aria-label='Reply to seth'>Reply</a> <a
+class="comment_permalink" href="#comment-43913" title="permalink to this comment" rel="nofollow">Link</a></div></li><li
+class="comment even thread-odd thread-alt depth-1" id="comment-43990"><div
+class="comment_head"> <span
+class="comment_author">bharanitharan</span> <span
+class="comment_date">October 5, 2009, 11:16 pm</span></div><div
+class="comment_text grt" id="comment-body-43990"><p>Thanks Man :) it have worked for me ;-)</p></div><div
+class="comment_footer"> <a
+class='comment-reply-link' href='/faq/howto-set-date-time-from-linux-command-prompt/?replytocom=43990#commentform' onclick='return addComment.moveForm( "comment-body-43990", "43990", "commentform", "371" )' aria-label='Reply to bharanitharan'>Reply</a> <a
+class="comment_permalink" href="#comment-43990" title="permalink to this comment" rel="nofollow">Link</a></div></li><li
+class="comment odd alt thread-even depth-1" id="comment-44365"><div
+class="comment_head"> <span
+class="comment_author">vinodanctk@gmail.com</span> <span
+class="comment_date">October 29, 2009, 8:23 am</span></div><div
+class="comment_text grt" id="comment-body-44365"><p>Dear sir,<br
+/> Many Thanks for the help<br
+/> Thanks</p></div><div
+class="comment_footer"> <a
+class='comment-reply-link' href='/faq/howto-set-date-time-from-linux-command-prompt/?replytocom=44365#commentform' onclick='return addComment.moveForm( "comment-body-44365", "44365", "commentform", "371" )' aria-label='Reply to vinodanctk@gmail.com'>Reply</a> <a
+class="comment_permalink" href="#comment-44365" title="permalink to this comment" rel="nofollow">Link</a></div></li><li
+class="comment even thread-odd thread-alt depth-1" id="comment-44447"><div
+class="comment_head"> <span
+class="comment_author">Mario Chamorro</span> <span
+class="comment_date">November 4, 2009, 8:43 pm</span></div><div
+class="comment_text grt" id="comment-body-44447"><p>Thank you , Murugesh . This is the first time I have ever found those &#8216;Info&#8217; pages useful . I need this for a SQL script at work that needs to fetch data from 7 days ago . Murugesh to the rescue!</p><p>[ ~ ] date &#8211;date=&#8217;7 days ago&#8217;<br
+/> Wed Oct 28 20:39:35 GMT 2009<br
+/> [ ~ ]</p><p>&#8212; Mario</p></div><div
+class="comment_footer"> <a
+class='comment-reply-link' href='/faq/howto-set-date-time-from-linux-command-prompt/?replytocom=44447#commentform' onclick='return addComment.moveForm( "comment-body-44447", "44447", "commentform", "371" )' aria-label='Reply to Mario Chamorro'>Reply</a> <a
+class="comment_permalink" href="#comment-44447" title="permalink to this comment" rel="nofollow">Link</a></div><ul
+class="children"><li
+class="comment odd alt depth-2" id="comment-502320"><div
+class="comment_head"> <span
+class="comment_author">LINUXKIDA</span> <span
+class="comment_date">January 9, 2015, 1:47 pm</span></div><div
+class="comment_text grt" id="comment-body-502320"><p>is there any command to find date after x days in future</p></div><div
+class="comment_footer"> <a
+class='comment-reply-link' href='/faq/howto-set-date-time-from-linux-command-prompt/?replytocom=502320#commentform' onclick='return addComment.moveForm( "comment-body-502320", "502320", "commentform", "371" )' aria-label='Reply to LINUXKIDA'>Reply</a> <a
+class="comment_permalink" href="#comment-502320" title="permalink to this comment" rel="nofollow">Link</a></div></li></ul></li><li
+class="comment even thread-even depth-1" id="comment-44517"><div
+class="comment_head"> <span
+class="comment_author">Jaxon</span> <span
+class="comment_date">November 9, 2009, 8:35 am</span></div><div
+class="comment_text grt" id="comment-body-44517"><p>It works, I have to check any time changing after restart the PC</p></div><div
+class="comment_footer"> <a
+class='comment-reply-link' href='/faq/howto-set-date-time-from-linux-command-prompt/?replytocom=44517#commentform' onclick='return addComment.moveForm( "comment-body-44517", "44517", "commentform", "371" )' aria-label='Reply to Jaxon'>Reply</a> <a
+class="comment_permalink" href="#comment-44517" title="permalink to this comment" rel="nofollow">Link</a></div></li><li
+class="comment odd alt thread-odd thread-alt depth-1" id="comment-45114"><div
+class="comment_head"> <span
+class="comment_author">sin</span> <span
+class="comment_date">December 9, 2009, 6:31 pm</span></div><div
+class="comment_text grt" id="comment-body-45114"><p>thanks it worked in first time&#8230; Really Thanks</p></div><div
+class="comment_footer"> <a
+class='comment-reply-link' href='/faq/howto-set-date-time-from-linux-command-prompt/?replytocom=45114#commentform' onclick='return addComment.moveForm( "comment-body-45114", "45114", "commentform", "371" )' aria-label='Reply to sin'>Reply</a> <a
+class="comment_permalink" href="#comment-45114" title="permalink to this comment" rel="nofollow">Link</a></div></li><li
+class="comment even thread-even depth-1" id="comment-45261"><div
+class="comment_head"> <span
+class="comment_author">Sana</span> <span
+class="comment_date">December 22, 2009, 4:43 am</span></div><div
+class="comment_text grt" id="comment-body-45261"><p>Thanks a lot for your help</p></div><div
+class="comment_footer"> <a
+class='comment-reply-link' href='/faq/howto-set-date-time-from-linux-command-prompt/?replytocom=45261#commentform' onclick='return addComment.moveForm( "comment-body-45261", "45261", "commentform", "371" )' aria-label='Reply to Sana'>Reply</a> <a
+class="comment_permalink" href="#comment-45261" title="permalink to this comment" rel="nofollow">Link</a></div></li><li
+class="comment odd alt thread-odd thread-alt depth-1" id="comment-45612"><div
+class="comment_head"> <span
+class="comment_author">nenopera</span> <span
+class="comment_date">January 18, 2010, 9:11 am</span></div><div
+class="comment_text grt" id="comment-body-45612"><p>$ sudo date +%Y%m%d%T -s &#8220;20081225 10:05:00&#8243;</p><p>[sudo] password for nenopera:<br
+/> 2008122510:05:00</p><p>$ date</p><p>Thu Dec 25 10:05:02 EST 2008</p></div><div
+class="comment_footer"> <a
+class='comment-reply-link' href='/faq/howto-set-date-time-from-linux-command-prompt/?replytocom=45612#commentform' onclick='return addComment.moveForm( "comment-body-45612", "45612", "commentform", "371" )' aria-label='Reply to nenopera'>Reply</a> <a
+class="comment_permalink" href="#comment-45612" title="permalink to this comment" rel="nofollow">Link</a></div></li><li
+class="comment even thread-even depth-1" id="comment-45886"><div
+class="comment_head"> <span
+class="comment_author">sumer</span> <span
+class="comment_date">February 8, 2010, 7:19 am</span></div><div
+class="comment_text grt" id="comment-body-45886"><p>`date +%G%m%d`-acb.txt<br
+/> this is my current date format. I wants to set last day’s date instead of current. I try this from last week . Plz help me…………</p></div><div
+class="comment_footer"> <a
+class='comment-reply-link' href='/faq/howto-set-date-time-from-linux-command-prompt/?replytocom=45886#commentform' onclick='return addComment.moveForm( "comment-body-45886", "45886", "commentform", "371" )' aria-label='Reply to sumer'>Reply</a> <a
+class="comment_permalink" href="#comment-45886" title="permalink to this comment" rel="nofollow">Link</a></div></li><li
+class="comment odd alt thread-odd thread-alt depth-1" id="comment-46230"><div
+class="comment_head"> <span
+class="comment_author">shabbirali</span> <span
+class="comment_date">March 3, 2010, 8:07 am</span></div><div
+class="comment_text grt" id="comment-body-46230"><p>Date command is sweet and simple&#8230; :)<br
+/> Man page is man!!!</p></div><div
+class="comment_footer"> <a
+class='comment-reply-link' href='/faq/howto-set-date-time-from-linux-command-prompt/?replytocom=46230#commentform' onclick='return addComment.moveForm( "comment-body-46230", "46230", "commentform", "371" )' aria-label='Reply to shabbirali'>Reply</a> <a
+class="comment_permalink" href="#comment-46230" title="permalink to this comment" rel="nofollow">Link</a></div></li><li
+class="comment even thread-even depth-1" id="comment-46234"><div
+class="comment_head"> <span
+class="comment_author">sumer</span> <span
+class="comment_date">March 3, 2010, 10:21 am</span></div><div
+class="comment_text grt" id="comment-body-46234"><p>thanks guys&#8230;.lov u &#8230;&#8230;..</p></div><div
+class="comment_footer"> <a
+class='comment-reply-link' href='/faq/howto-set-date-time-from-linux-command-prompt/?replytocom=46234#commentform' onclick='return addComment.moveForm( "comment-body-46234", "46234", "commentform", "371" )' aria-label='Reply to sumer'>Reply</a> <a
+class="comment_permalink" href="#comment-46234" title="permalink to this comment" rel="nofollow">Link</a></div></li><li
+class="comment odd alt thread-odd thread-alt depth-1" id="comment-46432"><div
+class="comment_head"> <span
+class="comment_author">ratish singh</span> <span
+class="comment_date">March 15, 2010, 1:41 pm</span></div><div
+class="comment_text grt" id="comment-body-46432"><p>How can i change my system date format on linux os?</p></div><div
+class="comment_footer"> <a
+class='comment-reply-link' href='/faq/howto-set-date-time-from-linux-command-prompt/?replytocom=46432#commentform' onclick='return addComment.moveForm( "comment-body-46432", "46432", "commentform", "371" )' aria-label='Reply to ratish singh'>Reply</a> <a
+class="comment_permalink" href="#comment-46432" title="permalink to this comment" rel="nofollow">Link</a></div></li><li
+class="comment even thread-even depth-1" id="comment-46818"><div
+class="comment_head"> <span
+class="comment_author">vishal</span> <span
+class="comment_date">April 9, 2010, 8:28 am</span></div><div
+class="comment_text grt" id="comment-body-46818"><p>satish,</p><p>follow the steps<br
+/> 1.check date with date command<br
+/> 2.set date with date -s command<br
+/> 3.hwclock &#8211;systohc<br
+/> 4.hwclock  &#8211;show</p><p>Vishal</p></div><div
+class="comment_footer"> <a
+class='comment-reply-link' href='/faq/howto-set-date-time-from-linux-command-prompt/?replytocom=46818#commentform' onclick='return addComment.moveForm( "comment-body-46818", "46818", "commentform", "371" )' aria-label='Reply to vishal'>Reply</a> <a
+class="comment_permalink" href="#comment-46818" title="permalink to this comment" rel="nofollow">Link</a></div><ul
+class="children"><li
+class="comment odd alt depth-2" id="comment-47705"><div
+class="comment_head"> <span
+class="comment_author">sunraj</span> <span
+class="comment_date">June 9, 2010, 1:28 pm</span></div><div
+class="comment_text grt" id="comment-body-47705"><p>i like your commands.  i am realy very impress</p></div><div
+class="comment_footer"> <a
+class='comment-reply-link' href='/faq/howto-set-date-time-from-linux-command-prompt/?replytocom=47705#commentform' onclick='return addComment.moveForm( "comment-body-47705", "47705", "commentform", "371" )' aria-label='Reply to sunraj'>Reply</a> <a
+class="comment_permalink" href="#comment-47705" title="permalink to this comment" rel="nofollow">Link</a></div></li></ul></li><li
+class="comment even thread-odd thread-alt depth-1" id="comment-47004"><div
+class="comment_head"> <span
+class="comment_author">Indika</span> <span
+class="comment_date">April 23, 2010, 5:09 pm</span></div><div
+class="comment_text grt" id="comment-body-47004"><p>Hi this is really helpful guys&#8230;.. thanks alot.</p></div><div
+class="comment_footer"> <a
+class='comment-reply-link' href='/faq/howto-set-date-time-from-linux-command-prompt/?replytocom=47004#commentform' onclick='return addComment.moveForm( "comment-body-47004", "47004", "commentform", "371" )' aria-label='Reply to Indika'>Reply</a> <a
+class="comment_permalink" href="#comment-47004" title="permalink to this comment" rel="nofollow">Link</a></div></li><li
+class="comment odd alt thread-even depth-1" id="comment-47123"><div
+class="comment_head"> <span
+class="comment_author">the birdie</span> <span
+class="comment_date">April 29, 2010, 11:20 am</span></div><div
+class="comment_text grt" id="comment-body-47123"><p>Thanks for passing on your knowledge.</p></div><div
+class="comment_footer"> <a
+class='comment-reply-link' href='/faq/howto-set-date-time-from-linux-command-prompt/?replytocom=47123#commentform' onclick='return addComment.moveForm( "comment-body-47123", "47123", "commentform", "371" )' aria-label='Reply to the birdie'>Reply</a> <a
+class="comment_permalink" href="#comment-47123" title="permalink to this comment" rel="nofollow">Link</a></div></li><li
+class="comment even thread-odd thread-alt depth-1" id="comment-47319"><div
+class="comment_head"> <span
+class="comment_author">luciano</span> <span
+class="comment_date">May 13, 2010, 3:22 pm</span></div><div
+class="comment_text grt" id="comment-body-47319"><p># date set=&#8221;2 OCT 2006 18:00:00&#8243; wrong!!!!<br
+/> # date &#8211;set=&#8221;2 OCT 2006 18:00:00&#8243;</p></div><div
+class="comment_footer"> <a
+class='comment-reply-link' href='/faq/howto-set-date-time-from-linux-command-prompt/?replytocom=47319#commentform' onclick='return addComment.moveForm( "comment-body-47319", "47319", "commentform", "371" )' aria-label='Reply to luciano'>Reply</a> <a
+class="comment_permalink" href="#comment-47319" title="permalink to this comment" rel="nofollow">Link</a></div></li><li
+class="comment odd alt thread-even depth-1" id="comment-47739"><div
+class="comment_head"> <span
+class="comment_author">gayan</span> <span
+class="comment_date">June 11, 2010, 3:45 am</span></div><div
+class="comment_text grt" id="comment-body-47739"><p>thinks bro,</p></div><div
+class="comment_footer"> <a
+class='comment-reply-link' href='/faq/howto-set-date-time-from-linux-command-prompt/?replytocom=47739#commentform' onclick='return addComment.moveForm( "comment-body-47739", "47739", "commentform", "371" )' aria-label='Reply to gayan'>Reply</a> <a
+class="comment_permalink" href="#comment-47739" title="permalink to this comment" rel="nofollow">Link</a></div></li><li
+class="comment even thread-odd thread-alt depth-1" id="comment-48070"><div
+class="comment_head"> <span
+class="comment_author">Vikas YAdav</span> <span
+class="comment_date">June 26, 2010, 8:36 am</span></div><div
+class="comment_text grt" id="comment-body-48070"><p>It was amazing&#8230;&#8230;!!!!!!!!!</p></div><div
+class="comment_footer"> <a
+class='comment-reply-link' href='/faq/howto-set-date-time-from-linux-command-prompt/?replytocom=48070#commentform' onclick='return addComment.moveForm( "comment-body-48070", "48070", "commentform", "371" )' aria-label='Reply to Vikas YAdav'>Reply</a> <a
+class="comment_permalink" href="#comment-48070" title="permalink to this comment" rel="nofollow">Link</a></div></li><li
+class="comment odd alt thread-even depth-1" id="comment-48315"><div
+class="comment_head"> <span
+class="comment_author">praV</span> <span
+class="comment_date">July 9, 2010, 4:47 pm</span></div><div
+class="comment_text grt" id="comment-body-48315"><p>THANKS</p></div><div
+class="comment_footer"> <a
+class='comment-reply-link' href='/faq/howto-set-date-time-from-linux-command-prompt/?replytocom=48315#commentform' onclick='return addComment.moveForm( "comment-body-48315", "48315", "commentform", "371" )' aria-label='Reply to praV'>Reply</a> <a
+class="comment_permalink" href="#comment-48315" title="permalink to this comment" rel="nofollow">Link</a></div></li><li
+class="comment even thread-odd thread-alt depth-1" id="comment-48545"><div
+class="comment_head"> <span
+class="comment_author">P.K.Ghosh</span> <span
+class="comment_date">July 29, 2010, 6:57 am</span></div><div
+class="comment_text grt" id="comment-body-48545"><p>Thank yo very much for sharing your knowledge<br
+/> It&#8217; really works fine<br
+/> So&#8230;  bye</p></div><div
+class="comment_footer"> <a
+class='comment-reply-link' href='/faq/howto-set-date-time-from-linux-command-prompt/?replytocom=48545#commentform' onclick='return addComment.moveForm( "comment-body-48545", "48545", "commentform", "371" )' aria-label='Reply to P.K.Ghosh'>Reply</a> <a
+class="comment_permalink" href="#comment-48545" title="permalink to this comment" rel="nofollow">Link</a></div></li><li
+class="comment odd alt thread-even depth-1" id="comment-50333"><div
+class="comment_head"> <span
+class="comment_author">kiran</span> <span
+class="comment_date">October 25, 2010, 9:19 am</span></div><div
+class="comment_text grt" id="comment-body-50333"><p>Thank you very much for giving me suggestion it is very usefull for me.</p><p>regards,<br
+/> kiran ugale.</p></div><div
+class="comment_footer"> <a
+class='comment-reply-link' href='/faq/howto-set-date-time-from-linux-command-prompt/?replytocom=50333#commentform' onclick='return addComment.moveForm( "comment-body-50333", "50333", "commentform", "371" )' aria-label='Reply to kiran'>Reply</a> <a
+class="comment_permalink" href="#comment-50333" title="permalink to this comment" rel="nofollow">Link</a></div></li><li
+class="comment even thread-odd thread-alt depth-1" id="comment-50612"><div
+class="comment_head"> <span
+class="comment_author">vijay</span> <span
+class="comment_date">November 9, 2010, 4:28 am</span></div><div
+class="comment_text grt" id="comment-body-50612"><p>Thanks a lot guys.. Everything worked.</p></div><div
+class="comment_footer"> <a
+class='comment-reply-link' href='/faq/howto-set-date-time-from-linux-command-prompt/?replytocom=50612#commentform' onclick='return addComment.moveForm( "comment-body-50612", "50612", "commentform", "371" )' aria-label='Reply to vijay'>Reply</a> <a
+class="comment_permalink" href="#comment-50612" title="permalink to this comment" rel="nofollow">Link</a></div></li><li
+class="comment odd alt thread-even depth-1" id="comment-50675"><div
+class="comment_head"> <span
+class="comment_author">William Simbota</span> <span
+class="comment_date">November 11, 2010, 12:46 pm</span></div><div
+class="comment_text grt" id="comment-body-50675"><p>I really appreciate. I think I will learn Linux at a fast pace with your assistance.</p></div><div
+class="comment_footer"> <a
+class='comment-reply-link' href='/faq/howto-set-date-time-from-linux-command-prompt/?replytocom=50675#commentform' onclick='return addComment.moveForm( "comment-body-50675", "50675", "commentform", "371" )' aria-label='Reply to William Simbota'>Reply</a> <a
+class="comment_permalink" href="#comment-50675" title="permalink to this comment" rel="nofollow">Link</a></div></li><li
+class="comment even thread-odd thread-alt depth-1" id="comment-53137"><div
+class="comment_head"> <span
+class="comment_author">Naresh Babu</span> <span
+class="comment_date">December 21, 2010, 12:26 pm</span></div><div
+class="comment_text grt" id="comment-body-53137"><p>Information about date was very much helped me<br
+/> Thanks</p></div><div
+class="comment_footer"> <a
+class='comment-reply-link' href='/faq/howto-set-date-time-from-linux-command-prompt/?replytocom=53137#commentform' onclick='return addComment.moveForm( "comment-body-53137", "53137", "commentform", "371" )' aria-label='Reply to Naresh Babu'>Reply</a> <a
+class="comment_permalink" href="#comment-53137" title="permalink to this comment" rel="nofollow">Link</a></div></li><li
+class="comment odd alt thread-even depth-1" id="comment-54876"><div
+class="comment_head"> <span
+class="comment_author">seachen</span> <span
+class="comment_date">January 13, 2011, 5:36 pm</span></div><div
+class="comment_text grt" id="comment-body-54876"><p>my vps time currently is as below:</p><p>[root@server25 ~]# date<br
+/> Thu Jan 13 17:22:54 UTC 2011</p><p>how to change it to Thu Jan 14 01:25:54 MYT 2011</p></div><div
+class="comment_footer"> <a
+class='comment-reply-link' href='/faq/howto-set-date-time-from-linux-command-prompt/?replytocom=54876#commentform' onclick='return addComment.moveForm( "comment-body-54876", "54876", "commentform", "371" )' aria-label='Reply to seachen'>Reply</a> <a
+class="comment_permalink" href="#comment-54876" title="permalink to this comment" rel="nofollow">Link</a></div></li><li
+class="comment even thread-odd thread-alt depth-1" id="comment-55184"><div
+class="comment_head"> <span
+class="comment_author">iskandar</span> <span
+class="comment_date">January 27, 2011, 6:45 am</span></div><div
+class="comment_text grt" id="comment-body-55184"><p>hai&#8230;<br
+/> im have a problem about time on fedora<br
+/> im use tht comman date, its change but if i restart my fedora is time will change<br
+/> and wrong time after restart the komputer..<br
+/> can help me?</p></div><div
+class="comment_footer"> <a
+class='comment-reply-link' href='/faq/howto-set-date-time-from-linux-command-prompt/?replytocom=55184#commentform' onclick='return addComment.moveForm( "comment-body-55184", "55184", "commentform", "371" )' aria-label='Reply to iskandar'>Reply</a> <a
+class="comment_permalink" href="#comment-55184" title="permalink to this comment" rel="nofollow">Link</a></div></li><li
+class="comment odd alt thread-even depth-1" id="comment-55186"><div
+class="comment_head"> <span
+class="comment_author">iskandar</span> <span
+class="comment_date">January 27, 2011, 7:40 am</span></div><div
+class="comment_text grt" id="comment-body-55186"><p>now i understand how tht comman<br
+/> tq friend..<br
+/> now my fedora time is ok<br
+/> the time is ok not change anymore..<br
+/> Tq</p></div><div
+class="comment_footer"> <a
+class='comment-reply-link' href='/faq/howto-set-date-time-from-linux-command-prompt/?replytocom=55186#commentform' onclick='return addComment.moveForm( "comment-body-55186", "55186", "commentform", "371" )' aria-label='Reply to iskandar'>Reply</a> <a
+class="comment_permalink" href="#comment-55186" title="permalink to this comment" rel="nofollow">Link</a></div></li><li
+class="comment even thread-odd thread-alt depth-1" id="comment-56377"><div
+class="comment_head"> <span
+class="comment_author">micxz</span> <span
+class="comment_date">March 18, 2011, 3:34 pm</span></div><div
+class="comment_text grt" id="comment-body-56377"><p>not a big deal but small typo:<br
+/> # 30: Second (ss)<br
+/> should read 13 or in the example it should be :30</p></div><div
+class="comment_footer"> <a
+class='comment-reply-link' href='/faq/howto-set-date-time-from-linux-command-prompt/?replytocom=56377#commentform' onclick='return addComment.moveForm( "comment-body-56377", "56377", "commentform", "371" )' aria-label='Reply to micxz'>Reply</a> <a
+class="comment_permalink" href="#comment-56377" title="permalink to this comment" rel="nofollow">Link</a></div></li><li
+class="comment odd alt thread-even depth-1" id="comment-56520"><div
+class="comment_head"> <span
+class="comment_author">ankit maini</span> <span
+class="comment_date">March 22, 2011, 1:13 pm</span></div><div
+class="comment_text grt" id="comment-body-56520"><p>thanx :)</p></div><div
+class="comment_footer"> <a
+class='comment-reply-link' href='/faq/howto-set-date-time-from-linux-command-prompt/?replytocom=56520#commentform' onclick='return addComment.moveForm( "comment-body-56520", "56520", "commentform", "371" )' aria-label='Reply to ankit maini'>Reply</a> <a
+class="comment_permalink" href="#comment-56520" title="permalink to this comment" rel="nofollow">Link</a></div></li><li
+class="comment even thread-odd thread-alt depth-1" id="comment-56634"><div
+class="comment_head"> <span
+class="comment_author">dani</span> <span
+class="comment_date">March 25, 2011, 6:37 am</span></div><div
+class="comment_text grt" id="comment-body-56634"><p>hello i want to change date separator&#8230; from / to .(dot) can u help me?<br
+/> for example 23/03/2011 to 23.03.2011</p></div><div
+class="comment_footer"> <a
+class='comment-reply-link' href='/faq/howto-set-date-time-from-linux-command-prompt/?replytocom=56634#commentform' onclick='return addComment.moveForm( "comment-body-56634", "56634", "commentform", "371" )' aria-label='Reply to dani'>Reply</a> <a
+class="comment_permalink" href="#comment-56634" title="permalink to this comment" rel="nofollow">Link</a></div></li><li
+class="comment odd alt thread-even depth-1" id="comment-57212"><div
+class="comment_head"> <span
+class="comment_author">Mohit G</span> <span
+class="comment_date">April 11, 2011, 1:38 pm</span></div><div
+class="comment_text grt" id="comment-body-57212"><p>View:<br
+/> hwclock &#8211;show<br
+/> date<br
+/> ls -l /etc/localtime</p><p>Change:<br
+/> To change the time use date followed by the month, day, hour, minute, and year all numeric and no spaces.<br
+/> date 041106232011<br
+/> hwclock &#8211;systohc<br
+/> ln -sf /usr/share/zoneinfo/ /etc/localtime<br
+/> vi /etc/sysconfig/clock (update timezone if redhat)<br
+/> service ntpd restart</p><p>Check:<br
+/> hwclock &#8211;show<br
+/> date<br
+/> ls -l /etc/localtime</p></div><div
+class="comment_footer"> <a
+class='comment-reply-link' href='/faq/howto-set-date-time-from-linux-command-prompt/?replytocom=57212#commentform' onclick='return addComment.moveForm( "comment-body-57212", "57212", "commentform", "371" )' aria-label='Reply to Mohit G'>Reply</a> <a
+class="comment_permalink" href="#comment-57212" title="permalink to this comment" rel="nofollow">Link</a></div></li><li
+class="comment even thread-odd thread-alt depth-1" id="comment-59596"><div
+class="comment_head"> <span
+class="comment_author">mz</span> <span
+class="comment_date">May 24, 2011, 9:41 am</span></div><div
+class="comment_text grt" id="comment-body-59596"><p>it worked fine.<br
+/> MZ</p></div><div
+class="comment_footer"> <a
+class='comment-reply-link' href='/faq/howto-set-date-time-from-linux-command-prompt/?replytocom=59596#commentform' onclick='return addComment.moveForm( "comment-body-59596", "59596", "commentform", "371" )' aria-label='Reply to mz'>Reply</a> <a
+class="comment_permalink" href="#comment-59596" title="permalink to this comment" rel="nofollow">Link</a></div></li><li
+class="comment odd alt thread-even depth-1" id="comment-60221"><div
+class="comment_head"> <span
+class="comment_author">Jaat</span> <span
+class="comment_date">June 25, 2011, 11:07 am</span></div><div
+class="comment_text grt" id="comment-body-60221"><p>How to change duplex setting of lan card in Rhel5</p></div><div
+class="comment_footer"> <a
+class='comment-reply-link' href='/faq/howto-set-date-time-from-linux-command-prompt/?replytocom=60221#commentform' onclick='return addComment.moveForm( "comment-body-60221", "60221", "commentform", "371" )' aria-label='Reply to Jaat'>Reply</a> <a
+class="comment_permalink" href="#comment-60221" title="permalink to this comment" rel="nofollow">Link</a></div><ul
+class="children"><li
+class="comment even depth-2" id="comment-74427"><div
+class="comment_head"> <span
+class="comment_author">Brent</span> <span
+class="comment_date">November 30, 2012, 10:54 pm</span></div><div
+class="comment_text grt" id="comment-body-74427"><p>On the same subject, how do I make non-dairy chocolate chip cookies?</p></div><div
+class="comment_footer"> <a
+class='comment-reply-link' href='/faq/howto-set-date-time-from-linux-command-prompt/?replytocom=74427#commentform' onclick='return addComment.moveForm( "comment-body-74427", "74427", "commentform", "371" )' aria-label='Reply to Brent'>Reply</a> <a
+class="comment_permalink" href="#comment-74427" title="permalink to this comment" rel="nofollow">Link</a></div></li></ul></li><li
+class="comment odd alt thread-odd thread-alt depth-1" id="comment-61156"><div
+class="comment_head"> <span
+class="comment_author">sasi</span> <span
+class="comment_date">July 30, 2011, 11:27 am</span></div><div
+class="comment_text grt" id="comment-body-61156"><p>thankz</p></div><div
+class="comment_footer"> <a
+class='comment-reply-link' href='/faq/howto-set-date-time-from-linux-command-prompt/?replytocom=61156#commentform' onclick='return addComment.moveForm( "comment-body-61156", "61156", "commentform", "371" )' aria-label='Reply to sasi'>Reply</a> <a
+class="comment_permalink" href="#comment-61156" title="permalink to this comment" rel="nofollow">Link</a></div></li><li
+class="comment even thread-even depth-1" id="comment-61610"><div
+class="comment_head"> <span
+class="comment_author">Erik Martis</span> <span
+class="comment_date">August 16, 2011, 6:27 pm</span></div><div
+class="comment_text grt" id="comment-body-61610"><p>Hi there,</p><p>thank you very much for the info &#8230;. works like a charm !!!<br
+/> btw, once I set my system date and time correctly the use of the<br
+/> &#8220;#hwclock &#8211;systohc&#8221; command rules ´em all too !!!</p><p>saludos!<br
+/> eriku</p></div><div
+class="comment_footer"> <a
+class='comment-reply-link' href='/faq/howto-set-date-time-from-linux-command-prompt/?replytocom=61610#commentform' onclick='return addComment.moveForm( "comment-body-61610", "61610", "commentform", "371" )' aria-label='Reply to Erik Martis'>Reply</a> <a
+class="comment_permalink" href="#comment-61610" title="permalink to this comment" rel="nofollow">Link</a></div></li><li
+class="comment odd alt thread-odd thread-alt depth-1" id="comment-64439"><div
+class="comment_head"> <span
+class="comment_author">prince f</span> <span
+class="comment_date">November 14, 2011, 6:37 pm</span></div><div
+class="comment_text grt" id="comment-body-64439"><p>thank  you!</p></div><div
+class="comment_footer"> <a
+class='comment-reply-link' href='/faq/howto-set-date-time-from-linux-command-prompt/?replytocom=64439#commentform' onclick='return addComment.moveForm( "comment-body-64439", "64439", "commentform", "371" )' aria-label='Reply to prince f'>Reply</a> <a
+class="comment_permalink" href="#comment-64439" title="permalink to this comment" rel="nofollow">Link</a></div></li><li
+class="comment even thread-even depth-1" id="comment-65940"><div
+class="comment_head"> <span
+class="comment_author">Soni Peterson</span> <span
+class="comment_date">December 23, 2011, 3:49 am</span></div><div
+class="comment_text grt" id="comment-body-65940"><p>To me, setting date and time in linux was really difficult and I was searching many documents / websites for  this, and thank you very much for such comprehensive information for setting date and time.  It helps me a lot.</p></div><div
+class="comment_footer"> <a
+class='comment-reply-link' href='/faq/howto-set-date-time-from-linux-command-prompt/?replytocom=65940#commentform' onclick='return addComment.moveForm( "comment-body-65940", "65940", "commentform", "371" )' aria-label='Reply to Soni Peterson'>Reply</a> <a
+class="comment_permalink" href="#comment-65940" title="permalink to this comment" rel="nofollow">Link</a></div></li><li
+class="comment odd alt thread-odd thread-alt depth-1" id="comment-67751"><div
+class="comment_head"> <span
+class="comment_author">surendra</span> <span
+class="comment_date">February 6, 2012, 11:00 am</span></div><div
+class="comment_text grt" id="comment-body-67751"><p>Thanks</p></div><div
+class="comment_footer"> <a
+class='comment-reply-link' href='/faq/howto-set-date-time-from-linux-command-prompt/?replytocom=67751#commentform' onclick='return addComment.moveForm( "comment-body-67751", "67751", "commentform", "371" )' aria-label='Reply to surendra'>Reply</a> <a
+class="comment_permalink" href="#comment-67751" title="permalink to this comment" rel="nofollow">Link</a></div></li><li
+class="comment even thread-even depth-1" id="comment-68264"><div
+class="comment_head"> <span
+class="comment_author">sam</span> <span
+class="comment_date">March 6, 2012, 10:32 am</span></div><div
+class="comment_text grt" id="comment-body-68264"><p>not a big deal , just type :</p><p>#date 030613252012<br
+/> 03=March<br
+/> 06=Day<br
+/> 13=Hour<br
+/> 25=Min<br
+/> 2012=Year</p><p>That&#8217;s IT :)</p></div><div
+class="comment_footer"> <a
+class='comment-reply-link' href='/faq/howto-set-date-time-from-linux-command-prompt/?replytocom=68264#commentform' onclick='return addComment.moveForm( "comment-body-68264", "68264", "commentform", "371" )' aria-label='Reply to sam'>Reply</a> <a
+class="comment_permalink" href="#comment-68264" title="permalink to this comment" rel="nofollow">Link</a></div></li><li
+class="comment odd alt thread-odd thread-alt depth-1" id="comment-68593"><div
+class="comment_head"> <span
+class="comment_author">prabhat</span> <span
+class="comment_date">March 27, 2012, 4:01 pm</span></div><div
+class="comment_text grt" id="comment-body-68593"><p>Hey guys i have tried each and every command to change my linux server  time but after i try every command new time is displayed.But when i try to verify it by running date command it shows old time again.Plssss help me&#8230;&#8230;..</p></div><div
+class="comment_footer"> <a
+class='comment-reply-link' href='/faq/howto-set-date-time-from-linux-command-prompt/?replytocom=68593#commentform' onclick='return addComment.moveForm( "comment-body-68593", "68593", "commentform", "371" )' aria-label='Reply to prabhat'>Reply</a> <a
+class="comment_permalink" href="#comment-68593" title="permalink to this comment" rel="nofollow">Link</a></div><ul
+class="children"><li
+class="comment even depth-2" id="comment-68604"><div
+class="comment_head"> <span
+class="comment_author">sam</span> <span
+class="comment_date">March 28, 2012, 9:30 am</span></div><div
+class="comment_text grt" id="comment-body-68604"><p>my friend this one is working fine nor more no less :</p><p>[server#] date 030613252012</p><p>it means :<br
+/> 03=March<br
+/> 06=Day<br
+/> 13=Hour<br
+/> 25=Min<br
+/> 2012=Year</p><p>That’s IT :)</p></div><div
+class="comment_footer"> <a
+class='comment-reply-link' href='/faq/howto-set-date-time-from-linux-command-prompt/?replytocom=68604#commentform' onclick='return addComment.moveForm( "comment-body-68604", "68604", "commentform", "371" )' aria-label='Reply to sam'>Reply</a> <a
+class="comment_permalink" href="#comment-68604" title="permalink to this comment" rel="nofollow">Link</a></div><ul
+class="children"><li
+class="comment odd alt depth-3" id="comment-68644"><div
+class="comment_head"> <span
+class="comment_author">prabhat singh</span> <span
+class="comment_date">March 30, 2012, 2:06 pm</span></div><div
+class="comment_text grt" id="comment-body-68644"><p>after running this command , do i have to run any other command also?</p></div><div
+class="comment_footer"> <a
+class='comment-reply-link' href='/faq/howto-set-date-time-from-linux-command-prompt/?replytocom=68644#commentform' onclick='return addComment.moveForm( "comment-body-68644", "68644", "commentform", "371" )' aria-label='Reply to prabhat singh'>Reply</a> <a
+class="comment_permalink" href="#comment-68644" title="permalink to this comment" rel="nofollow">Link</a></div><ul
+class="children"><li
+class="comment even depth-4" id="comment-68695"><div
+class="comment_head"> <span
+class="comment_author">sam</span> <span
+class="comment_date">April 3, 2012, 9:28 am</span></div><div
+class="comment_text grt" id="comment-body-68695"><p>nothing ;</p><p>just to make sure run :<br
+/> #date</p><p>and see the date ;</p></div><div
+class="comment_footer"> <a
+class='comment-reply-link' href='/faq/howto-set-date-time-from-linux-command-prompt/?replytocom=68695#commentform' onclick='return addComment.moveForm( "comment-body-68695", "68695", "commentform", "371" )' aria-label='Reply to sam'>Reply</a> <a
+class="comment_permalink" href="#comment-68695" title="permalink to this comment" rel="nofollow">Link</a></div></li></ul></li></ul></li></ul></li><li
+class="comment odd alt thread-even depth-1" id="comment-71566"><div
+class="comment_head"> <span
+class="comment_author">sunay</span> <span
+class="comment_date">September 12, 2012, 8:21 am</span></div><div
+class="comment_text grt" id="comment-body-71566"><p>its easy to change date or time</p></div><div
+class="comment_footer"> <a
+class='comment-reply-link' href='/faq/howto-set-date-time-from-linux-command-prompt/?replytocom=71566#commentform' onclick='return addComment.moveForm( "comment-body-71566", "71566", "commentform", "371" )' aria-label='Reply to sunay'>Reply</a> <a
+class="comment_permalink" href="#comment-71566" title="permalink to this comment" rel="nofollow">Link</a></div></li><li
+class="comment even thread-odd thread-alt depth-1" id="comment-71604"><div
+class="comment_head"> <span
+class="comment_author">Rao</span> <span
+class="comment_date">September 14, 2012, 2:22 pm</span></div><div
+class="comment_text grt" id="comment-body-71604"><p>Helped a lot&#8230;Thanks&#8230;</p></div><div
+class="comment_footer"> <a
+class='comment-reply-link' href='/faq/howto-set-date-time-from-linux-command-prompt/?replytocom=71604#commentform' onclick='return addComment.moveForm( "comment-body-71604", "71604", "commentform", "371" )' aria-label='Reply to Rao'>Reply</a> <a
+class="comment_permalink" href="#comment-71604" title="permalink to this comment" rel="nofollow">Link</a></div></li><li
+class="comment odd alt thread-even depth-1" id="comment-72156"><div
+class="comment_head"> <span
+class="comment_author">Ahamed Bauani</span> <span
+class="comment_date">October 11, 2012, 8:28 pm</span></div><div
+class="comment_text grt" id="comment-body-72156"><p>Thanks a lot for your help. But problem is there is no way to change the date if it is a VPS server :(</p></div><div
+class="comment_footer"> <a
+class='comment-reply-link' href='/faq/howto-set-date-time-from-linux-command-prompt/?replytocom=72156#commentform' onclick='return addComment.moveForm( "comment-body-72156", "72156", "commentform", "371" )' aria-label='Reply to Ahamed Bauani'>Reply</a> <a
+class="comment_permalink" href="#comment-72156" title="permalink to this comment" rel="nofollow">Link</a></div></li><li
+class="comment even thread-odd thread-alt depth-1" id="comment-72185"><div
+class="comment_head"> <span
+class="comment_author">Sam</span> <span
+class="comment_date">October 12, 2012, 5:31 pm</span></div><div
+class="comment_text grt" id="comment-body-72185"><p>There is no different between actual server and virtual server ; you can use same  command to change the date :</p><p>[VPS-server]# date 030613252012</p><p>it means :<br
+/> 03=March<br
+/> 06=Day<br
+/> 13=Hour<br
+/> 25=Min<br
+/> 2012=Year</p></div><div
+class="comment_footer"> <a
+class='comment-reply-link' href='/faq/howto-set-date-time-from-linux-command-prompt/?replytocom=72185#commentform' onclick='return addComment.moveForm( "comment-body-72185", "72185", "commentform", "371" )' aria-label='Reply to Sam'>Reply</a> <a
+class="comment_permalink" href="#comment-72185" title="permalink to this comment" rel="nofollow">Link</a></div></li><li
+class="comment odd alt thread-even depth-1" id="comment-72300"><div
+class="comment_head"> <span
+class="comment_author">Sam</span> <span
+class="comment_date">October 17, 2012, 8:01 pm</span></div><div
+class="comment_text grt" id="comment-body-72300"><p>Could you please tel me what distribution of linux that you are using ?</p></div><div
+class="comment_footer"> <a
+class='comment-reply-link' href='/faq/howto-set-date-time-from-linux-command-prompt/?replytocom=72300#commentform' onclick='return addComment.moveForm( "comment-body-72300", "72300", "commentform", "371" )' aria-label='Reply to Sam'>Reply</a> <a
+class="comment_permalink" href="#comment-72300" title="permalink to this comment" rel="nofollow">Link</a></div></li><li
+class="comment even thread-odd thread-alt depth-1" id="comment-72705"><div
+class="comment_head"> <span
+class="comment_author">hapoint from bpoint</span> <span
+class="comment_date">October 31, 2012, 12:58 pm</span></div><div
+class="comment_text grt" id="comment-body-72705"><p>Thanks :)</p></div><div
+class="comment_footer"> <a
+class='comment-reply-link' href='/faq/howto-set-date-time-from-linux-command-prompt/?replytocom=72705#commentform' onclick='return addComment.moveForm( "comment-body-72705", "72705", "commentform", "371" )' aria-label='Reply to hapoint from bpoint'>Reply</a> <a
+class="comment_permalink" href="#comment-72705" title="permalink to this comment" rel="nofollow">Link</a></div></li><li
+class="comment odd alt thread-even depth-1" id="comment-82507"><div
+class="comment_head"> <span
+class="comment_author">dipesh</span> <span
+class="comment_date">March 15, 2013, 3:47 pm</span></div><div
+class="comment_text grt" id="comment-body-82507"><p>This is all awesome guys&#8230; many thanks</p></div><div
+class="comment_footer"> <a
+class='comment-reply-link' href='/faq/howto-set-date-time-from-linux-command-prompt/?replytocom=82507#commentform' onclick='return addComment.moveForm( "comment-body-82507", "82507", "commentform", "371" )' aria-label='Reply to dipesh'>Reply</a> <a
+class="comment_permalink" href="#comment-82507" title="permalink to this comment" rel="nofollow">Link</a></div></li><li
+class="comment even thread-odd thread-alt depth-1" id="comment-85976"><div
+class="comment_head"> <span
+class="comment_author">Ricky1990</span> <span
+class="comment_date">April 8, 2013, 2:11 pm</span></div><div
+class="comment_text grt" id="comment-body-85976"><p>I really thank you so much because of my wordpress site display wrong date. After read this post, i&#8217;ve just changed it. Thanks so much again !</p></div><div
+class="comment_footer"> <a
+class='comment-reply-link' href='/faq/howto-set-date-time-from-linux-command-prompt/?replytocom=85976#commentform' onclick='return addComment.moveForm( "comment-body-85976", "85976", "commentform", "371" )' aria-label='Reply to Ricky1990'>Reply</a> <a
+class="comment_permalink" href="#comment-85976" title="permalink to this comment" rel="nofollow">Link</a></div></li><li
+class="comment odd alt thread-even depth-1" id="comment-92298"><div
+class="comment_head"> <span
+class="comment_author">Milton</span> <span
+class="comment_date">May 11, 2013, 7:33 am</span></div><div
+class="comment_text grt" id="comment-body-92298"><p>Very helpful article.</p></div><div
+class="comment_footer"> <a
+class='comment-reply-link' href='/faq/howto-set-date-time-from-linux-command-prompt/?replytocom=92298#commentform' onclick='return addComment.moveForm( "comment-body-92298", "92298", "commentform", "371" )' aria-label='Reply to Milton'>Reply</a> <a
+class="comment_permalink" href="#comment-92298" title="permalink to this comment" rel="nofollow">Link</a></div></li><li
+class="comment even thread-odd thread-alt depth-1" id="comment-99497"><div
+class="comment_head"> <span
+class="comment_author">yusuf</span> <span
+class="comment_date">October 19, 2013, 11:48 am</span></div><div
+class="comment_text grt" id="comment-body-99497"><p>HI,</p><p> how do i update time one linux machine to another machine via command ?</p></div><div
+class="comment_footer"> <a
+class='comment-reply-link' href='/faq/howto-set-date-time-from-linux-command-prompt/?replytocom=99497#commentform' onclick='return addComment.moveForm( "comment-body-99497", "99497", "commentform", "371" )' aria-label='Reply to yusuf'>Reply</a> <a
+class="comment_permalink" href="#comment-99497" title="permalink to this comment" rel="nofollow">Link</a></div></li><li
+class="comment odd alt thread-even depth-1" id="comment-102797"><div
+class="comment_head"> <span
+class="comment_author">PRAVEEN</span> <span
+class="comment_date">November 19, 2013, 2:10 am</span></div><div
+class="comment_text grt" id="comment-body-102797"><p>I am getting below error while changing the time. can any one tell me how to resove it.<br
+/> [cnems@SVT-CSM-01-M:/etc] date 1026140013<br
+/> date: cannot set date: Operation not permitted<br
+/> Sat Oct 26 14:00:00 BST 2013<br
+/> [cnems@SVT-CSM-01-M:/etc]</p></div><div
+class="comment_footer"> <a
+class='comment-reply-link' href='/faq/howto-set-date-time-from-linux-command-prompt/?replytocom=102797#commentform' onclick='return addComment.moveForm( "comment-body-102797", "102797", "commentform", "371" )' aria-label='Reply to PRAVEEN'>Reply</a> <a
+class="comment_permalink" href="#comment-102797" title="permalink to this comment" rel="nofollow">Link</a></div></li><li
+class="comment even thread-odd thread-alt depth-1" id="comment-102834"><div
+class="comment_head"> <span
+class="comment_author">Sam</span> <span
+class="comment_date">November 19, 2013, 6:00 am</span></div><div
+class="comment_text grt" id="comment-body-102834"><p>Please see the below sample :<br
+/> [Server#] date 030613252012</p><p>it means :<br
+/> 03=March<br
+/> 06=Day<br
+/> 13=Hour<br
+/> 25=Min<br
+/> 2012=Year</p></div><div
+class="comment_footer"> <a
+class='comment-reply-link' href='/faq/howto-set-date-time-from-linux-command-prompt/?replytocom=102834#commentform' onclick='return addComment.moveForm( "comment-body-102834", "102834", "commentform", "371" )' aria-label='Reply to Sam'>Reply</a> <a
+class="comment_permalink" href="#comment-102834" title="permalink to this comment" rel="nofollow">Link</a></div></li><li
+class="comment odd alt thread-even depth-1" id="comment-103711"><div
+class="comment_head"> <span
+class="comment_author">sal</span> <span
+class="comment_date">November 22, 2013, 7:19 pm</span></div><div
+class="comment_text grt" id="comment-body-103711"><p>I have a VCX Connect box, a V7005, that accepts some of the commands on this page to change the date however the date is not actually changed. I&#8217;ve ran the following to no avail:</p><p># DATE -S &#8220;22 NOV 2013 10:00:00&#8243;</p><p>This in different variations.</p><p>Might anyone know if there is another syntax associated with a 3com VCX box?</p></div><div
+class="comment_footer"> <a
+class='comment-reply-link' href='/faq/howto-set-date-time-from-linux-command-prompt/?replytocom=103711#commentform' onclick='return addComment.moveForm( "comment-body-103711", "103711", "commentform", "371" )' aria-label='Reply to sal'>Reply</a> <a
+class="comment_permalink" href="#comment-103711" title="permalink to this comment" rel="nofollow">Link</a></div></li><li
+class="comment even thread-odd thread-alt depth-1" id="comment-104141"><div
+class="comment_head"> <span
+class="comment_author">Sam</span> <span
+class="comment_date">November 24, 2013, 5:56 am</span></div><div
+class="comment_text grt" id="comment-body-104141"><p>have you tried the command that I have shared with you , and what was the output ?<br
+/> &#8221;<br
+/> Please see the below sample :<br
+/> [Server#] date 030613252012</p><p>it means :<br
+/> 03=March<br
+/> 06=Day<br
+/> 13=Hour<br
+/> 25=Min<br
+/> 2012=Year</p><p>&#8220;</p></div><div
+class="comment_footer"> <a
+class='comment-reply-link' href='/faq/howto-set-date-time-from-linux-command-prompt/?replytocom=104141#commentform' onclick='return addComment.moveForm( "comment-body-104141", "104141", "commentform", "371" )' aria-label='Reply to Sam'>Reply</a> <a
+class="comment_permalink" href="#comment-104141" title="permalink to this comment" rel="nofollow">Link</a></div></li><li
+class="comment odd alt thread-even depth-1" id="comment-104585"><div
+class="comment_head"> <span
+class="comment_author">sal</span> <span
+class="comment_date">November 25, 2013, 4:35 pm</span></div><div
+class="comment_text grt" id="comment-body-104585"><p>Hi Sam</p><p>I managed to change the time on our VCX Linux box by entering one different variations of the command below. Not sure of the exact syntax but it goes something like this:</p><p># DATE -SET “22 NOV 2013 10:00:00 PST″</p><p>It took a short while for the change to reflect on the box and all phones. Short while meaning a few hours.</p></div><div
+class="comment_footer"> <a
+class='comment-reply-link' href='/faq/howto-set-date-time-from-linux-command-prompt/?replytocom=104585#commentform' onclick='return addComment.moveForm( "comment-body-104585", "104585", "commentform", "371" )' aria-label='Reply to sal'>Reply</a> <a
+class="comment_permalink" href="#comment-104585" title="permalink to this comment" rel="nofollow">Link</a></div></li><li
+class="comment even thread-odd thread-alt depth-1" id="comment-104870"><div
+class="comment_head"> <span
+class="comment_author">Sam</span> <span
+class="comment_date">November 26, 2013, 8:46 am</span></div><div
+class="comment_text grt" id="comment-body-104870"><p>Dear ,</p><p>Could you please share with me the output of below command ?</p><p># uname -a</p><p>Thanks</p></div><div
+class="comment_footer"> <a
+class='comment-reply-link' href='/faq/howto-set-date-time-from-linux-command-prompt/?replytocom=104870#commentform' onclick='return addComment.moveForm( "comment-body-104870", "104870", "commentform", "371" )' aria-label='Reply to Sam'>Reply</a> <a
+class="comment_permalink" href="#comment-104870" title="permalink to this comment" rel="nofollow">Link</a></div></li><li
+class="comment odd alt thread-even depth-1" id="comment-112514"><div
+class="comment_head"> <span
+class="comment_author">taufeeq</span> <span
+class="comment_date">January 12, 2014, 6:04 am</span></div><div
+class="comment_text grt" id="comment-body-112514"><p>not working says cannot set date:operation not permitted<br
+/> what i can do?</p></div><div
+class="comment_footer"> <a
+class='comment-reply-link' href='/faq/howto-set-date-time-from-linux-command-prompt/?replytocom=112514#commentform' onclick='return addComment.moveForm( "comment-body-112514", "112514", "commentform", "371" )' aria-label='Reply to taufeeq'>Reply</a> <a
+class="comment_permalink" href="#comment-112514" title="permalink to this comment" rel="nofollow">Link</a></div></li><li
+class="comment even thread-odd thread-alt depth-1" id="comment-112548"><div
+class="comment_head"> <span
+class="comment_author">Sam</span> <span
+class="comment_date">January 13, 2014, 1:51 pm</span></div><div
+class="comment_text grt" id="comment-body-112548"><p>Check , weather you are root user , or not .<br
+/> normal user , cant change date .</p><p>date -s &#8220;YYYY-MM-DD HH:MM:SS&#8221;</p></div><div
+class="comment_footer"> <a
+class='comment-reply-link' href='/faq/howto-set-date-time-from-linux-command-prompt/?replytocom=112548#commentform' onclick='return addComment.moveForm( "comment-body-112548", "112548", "commentform", "371" )' aria-label='Reply to Sam'>Reply</a> <a
+class="comment_permalink" href="#comment-112548" title="permalink to this comment" rel="nofollow">Link</a></div><ul
+class="children"><li
+class="comment odd alt depth-2" id="comment-112657"><div
+class="comment_head"> <span
+class="comment_author">taufeeq</span> <span
+class="comment_date">January 18, 2014, 5:36 am</span></div><div
+class="comment_text grt" id="comment-body-112657"><p>any trick to change?</p></div><div
+class="comment_footer"> <a
+class='comment-reply-link' href='/faq/howto-set-date-time-from-linux-command-prompt/?replytocom=112657#commentform' onclick='return addComment.moveForm( "comment-body-112657", "112657", "commentform", "371" )' aria-label='Reply to taufeeq'>Reply</a> <a
+class="comment_permalink" href="#comment-112657" title="permalink to this comment" rel="nofollow">Link</a></div></li></ul></li><li
+class="comment even thread-even depth-1" id="comment-112705"><div
+class="comment_head"> <span
+class="comment_author">sam</span> <span
+class="comment_date">January 18, 2014, 7:43 pm</span></div><div
+class="comment_text grt" id="comment-body-112705"><p>please send me the output of the below command :</p><p># uname -a</p></div><div
+class="comment_footer"> <a
+class='comment-reply-link' href='/faq/howto-set-date-time-from-linux-command-prompt/?replytocom=112705#commentform' onclick='return addComment.moveForm( "comment-body-112705", "112705", "commentform", "371" )' aria-label='Reply to sam'>Reply</a> <a
+class="comment_permalink" href="#comment-112705" title="permalink to this comment" rel="nofollow">Link</a></div></li><li
+class="comment odd alt thread-odd thread-alt depth-1" id="comment-112736"><div
+class="comment_head"> <span
+class="comment_author">taufeeq</span> <span
+class="comment_date">January 19, 2014, 7:57 am</span></div><div
+class="comment_text grt" id="comment-body-112736"><p>[mphs@mphs ~]$ date &#8211;set&#8221;4 JAN 2014 1:25:00&#8243;<br
+/> date: unrecognized option &#8216;&#8211;set4 JAN 2014 1:25:00&#8242;<br
+/> Try `date &#8211;help&#8217; for more information.<br
+/> [mphs@mphs ~]$ ^C<br
+/> [mphs@mphs ~]$</p></div><div
+class="comment_footer"> <a
+class='comment-reply-link' href='/faq/howto-set-date-time-from-linux-command-prompt/?replytocom=112736#commentform' onclick='return addComment.moveForm( "comment-body-112736", "112736", "commentform", "371" )' aria-label='Reply to taufeeq'>Reply</a> <a
+class="comment_permalink" href="#comment-112736" title="permalink to this comment" rel="nofollow">Link</a></div><ul
+class="children"><li
+class="comment byuser comment-author-administrator bypostauthor even depth-2" id="comment-112751"><div
+class="comment_head"> <span
+class="comment_author"><a
+href='http://www.cyberciti.biz/tips/about-us' rel='external nofollow' class='url'>Nix Craft</a></span> <span
+class="comment_date">January 19, 2014, 10:57 am</span></div><div
+class="comment_text grt" id="comment-body-112751"><p>You need to run date as root user:</p><pre>sudo date --set="4 JAN 2014 13:25:00"</pre></div><div
+class="comment_footer"> <a
+class='comment-reply-link' href='/faq/howto-set-date-time-from-linux-command-prompt/?replytocom=112751#commentform' onclick='return addComment.moveForm( "comment-body-112751", "112751", "commentform", "371" )' aria-label='Reply to Nix Craft'>Reply</a> <a
+class="comment_permalink" href="#comment-112751" title="permalink to this comment" rel="nofollow">Link</a></div><ul
+class="children"><li
+class="comment odd alt depth-3" id="comment-112762"><div
+class="comment_head"> <span
+class="comment_author">taufeeq</span> <span
+class="comment_date">January 19, 2014, 4:08 pm</span></div><div
+class="comment_text grt" id="comment-body-112762"><p>@Nix craft,     its asking password but i don&#8217;t know the password and its impossible to know the password bcoz our system admin set its secretly</p><p>[mphs@mphs ~]$ sudo date &#8211;set=&#8221;4 JAN 2014 9:35:00&#8243;<br
+/> [sudo] password for mphs:</p></div><div
+class="comment_footer"> <a
+class='comment-reply-link' href='/faq/howto-set-date-time-from-linux-command-prompt/?replytocom=112762#commentform' onclick='return addComment.moveForm( "comment-body-112762", "112762", "commentform", "371" )' aria-label='Reply to taufeeq'>Reply</a> <a
+class="comment_permalink" href="#comment-112762" title="permalink to this comment" rel="nofollow">Link</a></div><ul
+class="children"><li
+class="comment byuser comment-author-administrator bypostauthor even depth-4" id="comment-112763"><div
+class="comment_head"> <span
+class="comment_author"><a
+href='http://www.cyberciti.biz/tips/about-us' rel='external nofollow' class='url'>Nix Craft</a></span> <span
+class="comment_date">January 19, 2014, 4:55 pm</span></div><div
+class="comment_text grt" id="comment-body-112763"><p>Try your own password. Also, you need to be root (sysadmin) or part of sysadmin group in /etc/sudoers to change system date. A normal user can not change system date or time due to security reasons.</p></div><div
+class="comment_footer"> <a
+class='comment-reply-link' href='/faq/howto-set-date-time-from-linux-command-prompt/?replytocom=112763#commentform' onclick='return addComment.moveForm( "comment-body-112763", "112763", "commentform", "371" )' aria-label='Reply to Nix Craft'>Reply</a> <a
+class="comment_permalink" href="#comment-112763" title="permalink to this comment" rel="nofollow">Link</a></div><ul
+class="children"><li
+class="comment odd alt depth-5" id="comment-112802"><div
+class="comment_head"> <span
+class="comment_author">taufeeq</span> <span
+class="comment_date">January 20, 2014, 1:28 pm</span></div><div
+class="comment_text grt" id="comment-body-112802"><p>ok got it thx for help</p></div><div
+class="comment_footer"> <a
+class='comment-reply-link' href='/faq/howto-set-date-time-from-linux-command-prompt/?replytocom=112802#commentform' onclick='return addComment.moveForm( "comment-body-112802", "112802", "commentform", "371" )' aria-label='Reply to taufeeq'>Reply</a> <a
+class="comment_permalink" href="#comment-112802" title="permalink to this comment" rel="nofollow">Link</a></div></li></ul></li></ul></li></ul></li></ul></li><li
+class="comment even thread-even depth-1" id="comment-112743"><div
+class="comment_head"> <span
+class="comment_author">sam</span> <span
+class="comment_date">January 19, 2014, 9:43 am</span></div><div
+class="comment_text grt" id="comment-body-112743"><p>Mr. Taufeeq</p><p>here is my Skype ID :</p><p>mos3535</p><p>regards<br
+/> mosleh</p></div><div
+class="comment_footer"> <a
+class='comment-reply-link' href='/faq/howto-set-date-time-from-linux-command-prompt/?replytocom=112743#commentform' onclick='return addComment.moveForm( "comment-body-112743", "112743", "commentform", "371" )' aria-label='Reply to sam'>Reply</a> <a
+class="comment_permalink" href="#comment-112743" title="permalink to this comment" rel="nofollow">Link</a></div></li><li
+class="comment odd alt thread-odd thread-alt depth-1" id="comment-112761"><div
+class="comment_head"> <span
+class="comment_author">taufeeq</span> <span
+class="comment_date">January 19, 2014, 4:04 pm</span></div><div
+class="comment_text grt" id="comment-body-112761"><p>here is out for # uname -a</p><p>[mphs@mphs ~]$ uname -a<br
+/> Linux mphs 2.6.31.5-127.fc12.i686.PAE #1 SMP Sat Nov 7 21:25:57 EST 2009 i686 i686 i386 GNU/Linux<br
+/> [mphs@mphs ~]$</p></div><div
+class="comment_footer"> <a
+class='comment-reply-link' href='/faq/howto-set-date-time-from-linux-command-prompt/?replytocom=112761#commentform' onclick='return addComment.moveForm( "comment-body-112761", "112761", "commentform", "371" )' aria-label='Reply to taufeeq'>Reply</a> <a
+class="comment_permalink" href="#comment-112761" title="permalink to this comment" rel="nofollow">Link</a></div></li><li
+class="comment even thread-even depth-1" id="comment-112773"><div
+class="comment_head"> <span
+class="comment_author">sam</span> <span
+class="comment_date">January 19, 2014, 8:37 pm</span></div><div
+class="comment_text grt" id="comment-body-112773"><p>can also please run the below command :</p><p># python -c &#8216;import platform ; print platform.dist()[0]&#8217;</p><p>and send the output here .</p><p>Skype : mos3535</p></div><div
+class="comment_footer"> <a
+class='comment-reply-link' href='/faq/howto-set-date-time-from-linux-command-prompt/?replytocom=112773#commentform' onclick='return addComment.moveForm( "comment-body-112773", "112773", "commentform", "371" )' aria-label='Reply to sam'>Reply</a> <a
+class="comment_permalink" href="#comment-112773" title="permalink to this comment" rel="nofollow">Link</a></div><ul
+class="children"><li
+class="comment odd alt depth-2" id="comment-112779"><div
+class="comment_head"> <span
+class="comment_author">taufeeq</span> <span
+class="comment_date">January 20, 2014, 4:09 am</span></div><div
+class="comment_text grt" id="comment-body-112779"><p>[mphs@mphs ~]$ python -c &#8216;import platform ; print platform.dist[0]&#8217;<br
+/> Traceback (most recent call last):<br
+/> File &#8220;&#8221;, line 1, in<br
+/> TypeError: &#8216;function&#8217; object is unsubscriptable<br
+/> [mphs@mphs ~]$</p><p>sorry bro m not on skype</p></div><div
+class="comment_footer"> <a
+class='comment-reply-link' href='/faq/howto-set-date-time-from-linux-command-prompt/?replytocom=112779#commentform' onclick='return addComment.moveForm( "comment-body-112779", "112779", "commentform", "371" )' aria-label='Reply to taufeeq'>Reply</a> <a
+class="comment_permalink" href="#comment-112779" title="permalink to this comment" rel="nofollow">Link</a></div></li></ul></li><li
+class="comment even thread-odd thread-alt depth-1" id="comment-112790"><div
+class="comment_head"> <span
+class="comment_author">sam</span> <span
+class="comment_date">January 20, 2014, 10:47 am</span></div><div
+class="comment_text grt" id="comment-body-112790"><p>please as I told you , try to change date by supper user like root user:</p><p># su &#8211;</p><p>if it ask you for password , you should know root password<br
+/> if not , please create password for root like  this :</p><p># passwd root</p></div><div
+class="comment_footer"> <a
+class='comment-reply-link' href='/faq/howto-set-date-time-from-linux-command-prompt/?replytocom=112790#commentform' onclick='return addComment.moveForm( "comment-body-112790", "112790", "commentform", "371" )' aria-label='Reply to sam'>Reply</a> <a
+class="comment_permalink" href="#comment-112790" title="permalink to this comment" rel="nofollow">Link</a></div></li><li
+class="comment odd alt thread-even depth-1" id="comment-122318"><div
+class="comment_head"> <span
+class="comment_author">Maurice</span> <span
+class="comment_date">March 6, 2014, 9:17 pm</span></div><div
+class="comment_text grt" id="comment-body-122318"><p>It even worked on the OLPC XO1</p></div><div
+class="comment_footer"> <a
+class='comment-reply-link' href='/faq/howto-set-date-time-from-linux-command-prompt/?replytocom=122318#commentform' onclick='return addComment.moveForm( "comment-body-122318", "122318", "commentform", "371" )' aria-label='Reply to Maurice'>Reply</a> <a
+class="comment_permalink" href="#comment-122318" title="permalink to this comment" rel="nofollow">Link</a></div></li><li
+class="comment even thread-odd thread-alt depth-1" id="comment-203055"><div
+class="comment_head"> <span
+class="comment_author">evhol</span> <span
+class="comment_date">June 3, 2014, 6:41 am</span></div><div
+class="comment_text grt" id="comment-body-203055"><p>thanks</p></div><div
+class="comment_footer"> <a
+class='comment-reply-link' href='/faq/howto-set-date-time-from-linux-command-prompt/?replytocom=203055#commentform' onclick='return addComment.moveForm( "comment-body-203055", "203055", "commentform", "371" )' aria-label='Reply to evhol'>Reply</a> <a
+class="comment_permalink" href="#comment-203055" title="permalink to this comment" rel="nofollow">Link</a></div></li><li
+class="comment odd alt thread-even depth-1" id="comment-205968"><div
+class="comment_head"> <span
+class="comment_author">Ajit</span> <span
+class="comment_date">June 6, 2014, 5:47 pm</span></div><div
+class="comment_text grt" id="comment-body-205968"><p>Thanks a lot.</p></div><div
+class="comment_footer"> <a
+class='comment-reply-link' href='/faq/howto-set-date-time-from-linux-command-prompt/?replytocom=205968#commentform' onclick='return addComment.moveForm( "comment-body-205968", "205968", "commentform", "371" )' aria-label='Reply to Ajit'>Reply</a> <a
+class="comment_permalink" href="#comment-205968" title="permalink to this comment" rel="nofollow">Link</a></div></li><li
+class="comment even thread-odd thread-alt depth-1" id="comment-211611"><div
+class="comment_head"> <span
+class="comment_author">kishan</span> <span
+class="comment_date">June 17, 2014, 5:39 am</span></div><div
+class="comment_text grt" id="comment-body-211611"><p>hello guys ..how to install VLC player in fedora 14 64bit</p></div><div
+class="comment_footer"> <a
+class='comment-reply-link' href='/faq/howto-set-date-time-from-linux-command-prompt/?replytocom=211611#commentform' onclick='return addComment.moveForm( "comment-body-211611", "211611", "commentform", "371" )' aria-label='Reply to kishan'>Reply</a> <a
+class="comment_permalink" href="#comment-211611" title="permalink to this comment" rel="nofollow">Link</a></div></li><li
+class="comment odd alt thread-even depth-1" id="comment-216433"><div
+class="comment_head"> <span
+class="comment_author">Matt</span> <span
+class="comment_date">July 1, 2014, 3:49 pm</span></div><div
+class="comment_text grt" id="comment-body-216433"><p>when I use:</p><p>date +%T -s &#8220;10:13:13&#8243;</p><p>or</p><p>date &#8211;set=&#8221;10:13:13&#8243; the time is reset to 00:00:00.</p><p>Is there a solution to this?</p></div><div
+class="comment_footer"> <a
+class='comment-reply-link' href='/faq/howto-set-date-time-from-linux-command-prompt/?replytocom=216433#commentform' onclick='return addComment.moveForm( "comment-body-216433", "216433", "commentform", "371" )' aria-label='Reply to Matt'>Reply</a> <a
+class="comment_permalink" href="#comment-216433" title="permalink to this comment" rel="nofollow">Link</a></div></li><li
+class="comment even thread-odd thread-alt depth-1" id="comment-216600"><div
+class="comment_head"> <span
+class="comment_author">sam</span> <span
+class="comment_date">July 2, 2014, 7:02 am</span></div><div
+class="comment_text grt" id="comment-body-216600"><p>To do what ?<br
+/> use the command below to change back the date and time :</p><p># date -s “YYYY-MM-DD HH:MM:SS”</p></div><div
+class="comment_footer"> <a
+class='comment-reply-link' href='/faq/howto-set-date-time-from-linux-command-prompt/?replytocom=216600#commentform' onclick='return addComment.moveForm( "comment-body-216600", "216600", "commentform", "371" )' aria-label='Reply to sam'>Reply</a> <a
+class="comment_permalink" href="#comment-216600" title="permalink to this comment" rel="nofollow">Link</a></div></li><li
+class="comment odd alt thread-even depth-1" id="comment-243584"><div
+class="comment_head"> <span
+class="comment_author">Fela</span> <span
+class="comment_date">August 12, 2014, 1:09 pm</span></div><div
+class="comment_text grt" id="comment-body-243584"><p>thanks for sharing</p></div><div
+class="comment_footer"> <a
+class='comment-reply-link' href='/faq/howto-set-date-time-from-linux-command-prompt/?replytocom=243584#commentform' onclick='return addComment.moveForm( "comment-body-243584", "243584", "commentform", "371" )' aria-label='Reply to Fela'>Reply</a> <a
+class="comment_permalink" href="#comment-243584" title="permalink to this comment" rel="nofollow">Link</a></div></li><li
+class="comment even thread-odd thread-alt depth-1" id="comment-260796"><div
+class="comment_head"> <span
+class="comment_author">Imad</span> <span
+class="comment_date">September 6, 2014, 9:48 am</span></div><div
+class="comment_text grt" id="comment-body-260796"><p>Really helped me.<br
+/> thanks for sharing..</p></div><div
+class="comment_footer"> <a
+class='comment-reply-link' href='/faq/howto-set-date-time-from-linux-command-prompt/?replytocom=260796#commentform' onclick='return addComment.moveForm( "comment-body-260796", "260796", "commentform", "371" )' aria-label='Reply to Imad'>Reply</a> <a
+class="comment_permalink" href="#comment-260796" title="permalink to this comment" rel="nofollow">Link</a></div></li><li
+class="comment odd alt thread-even depth-1" id="comment-268271"><div
+class="comment_head"> <span
+class="comment_author">Narayana Reddy</span> <span
+class="comment_date">September 19, 2014, 11:37 am</span></div><div
+class="comment_text grt" id="comment-body-268271"><p>Even though if i set the system time using the command &#8220;date  -s  &#8221; &#8221; when i restart it again showing the old time y?  is it the problem of c-mos battery or is there any other command to set time .</p></div><div
+class="comment_footer"> <a
+class='comment-reply-link' href='/faq/howto-set-date-time-from-linux-command-prompt/?replytocom=268271#commentform' onclick='return addComment.moveForm( "comment-body-268271", "268271", "commentform", "371" )' aria-label='Reply to Narayana Reddy'>Reply</a> <a
+class="comment_permalink" href="#comment-268271" title="permalink to this comment" rel="nofollow">Link</a></div><ul
+class="children"><li
+class="comment even depth-2" id="comment-331058"><div
+class="comment_head"> <span
+class="comment_author">Fela</span> <span
+class="comment_date">October 9, 2014, 12:17 pm</span></div><div
+class="comment_text grt" id="comment-body-331058"><p>Hi Naraya,<br
+/> I would advice you to check the cmos, that is most likely the biggest problem.<br
+/> Before you sort that out; after setting the date using the command #date &#8211;set = &#8220;STRING&#8221;, remember to follow with the use of command # hwclock &#8211;systohc</p></div><div
+class="comment_footer"> <a
+class='comment-reply-link' href='/faq/howto-set-date-time-from-linux-command-prompt/?replytocom=331058#commentform' onclick='return addComment.moveForm( "comment-body-331058", "331058", "commentform", "371" )' aria-label='Reply to Fela'>Reply</a> <a
+class="comment_permalink" href="#comment-331058" title="permalink to this comment" rel="nofollow">Link</a></div></li></ul></li><li
+class="comment odd alt thread-odd thread-alt depth-1" id="comment-329331"><div
+class="comment_head"> <span
+class="comment_author">vsj</span> <span
+class="comment_date">October 8, 2014, 2:01 am</span></div><div
+class="comment_text grt" id="comment-body-329331"><p>it works thanks</p></div><div
+class="comment_footer"> <a
+class='comment-reply-link' href='/faq/howto-set-date-time-from-linux-command-prompt/?replytocom=329331#commentform' onclick='return addComment.moveForm( "comment-body-329331", "329331", "commentform", "371" )' aria-label='Reply to vsj'>Reply</a> <a
+class="comment_permalink" href="#comment-329331" title="permalink to this comment" rel="nofollow">Link</a></div></li><li
+class="comment even thread-even depth-1" id="comment-358033"><div
+class="comment_head"> <span
+class="comment_author">Gunasekar</span> <span
+class="comment_date">October 29, 2014, 1:21 pm</span></div><div
+class="comment_text grt" id="comment-body-358033"><p>I am trying to change the time from EDT to PDT<br
+/> I have tried preety much everything still doent work.</p><p>i have changed<br
+/> :[/etc/sysconfig]# ls -l /etc/localtime<br
+/> lrwxrwxrwx 1 root root 37 Oct 28 15:48 /etc/localtime -&gt; /usr/share/zoneinfo/America/Vancouver<br
+/> i have updated /etc/sysconfig/clock with Vancouver<br
+/> but when i run service ntpd restart , i get<br
+/> Shutting down ntpd:                                        [FAILED]<br
+/> Starting ntpd:                                             [  OK  ]</p><p>&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;<br
+/> still shows the Eastern time.. :(<br
+/> [/etc/sysconfig]# date<br
+/> Wed Oct 29 09:20:40 EDT 2014</p></div><div
+class="comment_footer"> <a
+class='comment-reply-link' href='/faq/howto-set-date-time-from-linux-command-prompt/?replytocom=358033#commentform' onclick='return addComment.moveForm( "comment-body-358033", "358033", "commentform", "371" )' aria-label='Reply to Gunasekar'>Reply</a> <a
+class="comment_permalink" href="#comment-358033" title="permalink to this comment" rel="nofollow">Link</a></div></li><li
+class="comment odd alt thread-odd thread-alt depth-1" id="comment-419129"><div
+class="comment_head"> <span
+class="comment_author">tewst</span> <span
+class="comment_date">November 24, 2014, 9:04 am</span></div><div
+class="comment_text grt" id="comment-body-419129"><p>what about service ntpd? need to stop before time change?</p></div><div
+class="comment_footer"> <a
+class='comment-reply-link' href='/faq/howto-set-date-time-from-linux-command-prompt/?replytocom=419129#commentform' onclick='return addComment.moveForm( "comment-body-419129", "419129", "commentform", "371" )' aria-label='Reply to tewst'>Reply</a> <a
+class="comment_permalink" href="#comment-419129" title="permalink to this comment" rel="nofollow">Link</a></div></li></ul><form
+id="commentform" method="post" action="http://www.cyberciti.biz/faq/wp-comments-post.php"> <a
+rel="nofollow" id="cancel-comment-reply-link" href="/faq/howto-set-date-time-from-linux-command-prompt/#respond" style="display:none;">Cancel reply</a><p
+class="comment_form_title">Leave a Comment</p><p
+id="comment_form_name"> <label
+for="author">Name <span
+class="required" title="Required">*</span></label> <input
+type="text" id="author" class="input_text" name="author" value="" tabindex="1" aria-required="true" /></p><p
+id="comment_form_email"> <label
+for="email">Email <span
+class="required" title="Required">*</span></label> <input
+type="text" id="email" class="input_text" name="email" value="" tabindex="2" aria-required="true" /></p><p
+id="comment_form_url"> <label
+for="url">Website</label> <input
+type="text" id="url" class="input_text" name="url" value="" tabindex="3" /></p><p
+id="comment_form_comment"> <label
+for="comment">Comment</label><textarea name="comment" id="comment" class="input_text" tabindex="4" rows="6"></textarea></p><p
+id="comment_form_submit"> <input
+type="submit" id="submit" class="input_submit" name="submit" tabindex="5" value="Submit" /></p><p
+style="display: none;"><input
+type="hidden" id="akismet_comment_nonce" name="akismet_comment_nonce" value="1bfd01a48e" /></p><p
+style="display: none;"><input
+type="hidden" id="ak_js" name="ak_js" value="126"/></p><input
+type='hidden' name='comment_post_ID' value='371' id='comment_post_ID' /> <input
+type='hidden' name='comment_parent' id='comment_parent' value='0' /></form></div><div
+class="prev_next"><p
+class="next_post">Next post: <a
+href="http://www.cyberciti.biz/faq/bash-shell-change-the-color-of-my-shell-prompt-under-linux-or-unix/" rel="next">BASH Shell: Change The Color of My Shell Prompt Under Linux or UNIX</a></p><p
+class="previous_post">Previous post: <a
+href="http://www.cyberciti.biz/faq/warning-remote-host-identification-has-changed-error-and-solution/" rel="prev">Warning: Remote Host Identification Has Changed error and solution</a></p></div></div><div
+class="sidebar"><div
+class="widget widget_text" id="text-384338372"><div
+class="textwidget"><script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>  <ins
+class="adsbygoogle"
+style="display:inline-block;width:300px;height:250px"
+data-ad-client="ca-pub-7825705102693166"
+data-ad-slot="7895531150"></ins> <script>(adsbygoogle = window.adsbygoogle || []).push({});</script></div></div><div
+class="widget search-form" id="thesis-search-widget-3"><form
+class="search_form" method="get" action="http://www.cyberciti.biz/faq"><p> <input
+class="input_text" type="text" id="s" name="s" value="To search, type and hit enter" onfocus="if (this.value == 'To search, type and hit enter') {this.value = '';}" onblur="if (this.value == '') {this.value = 'To search, type and hit enter';}" /> <input
+type="hidden" id="searchsubmit" value="Search" /></p></form></div><div
+class="widget widget_text" id="text-384338374"><div
+class="textwidget"><script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>  <ins
+class="adsbygoogle"
+style="display:inline-block;width:300px;height:600px"
+data-ad-client="ca-pub-7825705102693166"
+data-ad-slot="3521177162"></ins> <script>(adsbygoogle = window.adsbygoogle || []).push({});</script></div></div><div
+class="widget widget_text" id="text-384338375"><p
+class="widget_title">Featured Articles:</p><div
+class="textwidget"><ul><li><a
+href="http://www.cyberciti.biz/open-source/30-cool-best-open-source-softwares-of-2013/">30 Cool Open Source Software I Discovered in 2013</a></li><li><a
+href="http://www.cyberciti.biz/tips/bash-aliases-mac-centos-linux-unix.html">30 Handy Bash Shell Aliases For Linux / Unix / Mac OS X</a></li><li><a
+href="http://www.cyberciti.biz/networking/nmap-command-examples-tutorials/">Top 30 Nmap Command Examples For Sys/Network Admins</a></li><li><a
+href="http://www.cyberciti.biz/tips/php-security-best-practices-tutorial.html">25 PHP Security Best Practices For Sys Admins</a></li><li><a
+href="http://www.cyberciti.biz/tips/top-linux-monitoring-tools.html">20 Linux System Monitoring Tools Every SysAdmin Should Know</a></li><li><a
+href="http://www.cyberciti.biz/tips/linux-security.html">20 Linux Server Hardening Security Tips</a></li><li><a
+href="http://www.cyberciti.biz/tips/linux-iptables-examples.html">Linux: 20 Iptables Examples For New SysAdmins</a></li><li><a
+href="http://www.cyberciti.biz/tips/linux-unix-bsd-openssh-server-best-practices.html">Top 20 OpenSSH Server Best Security Practices </a></li><li><a
+href="http://www.cyberciti.biz/tips/linux-unix-bsd-nginx-webserver-security.html">Top 20 Nginx WebServer Best Security Practices</a><li><A
+href="http://www.cyberciti.biz/tips/check-unix-linux-configuration-file-for-syntax-errors.html">20 Examples: Make Sure Unix / Linux Configuration Files Are Free From Syntax Errors</a><li><a
+href="http://www.cyberciti.biz/open-source/best-terminal-applications-for-linux-unix-macosx/">15 Greatest Open Source Terminal Applications Of 2012</a></li><li><a
+href="http://www.cyberciti.biz/tips/my-10-unix-command-line-mistakes.html">My 10 UNIX Command Line Mistakes</a></li><li><a
+href="http://www.cyberciti.biz/tips/open-source-project-management-software.html">Top 10 Open Source Web-Based Project Management Software</a></li><li><a
+href="http://www.cyberciti.biz/tips/download-email-client-for-linux-mac-osx-windows.html">Top 5 Email Client For Linux, Mac OS X, and Windows Users</a></li><li><a
+href="http://www.cyberciti.biz/tips/linux-laptop.html">The Novice Guide To Buying A Linux Laptop</a></li></ul></div></div></div></div><div
+class="footer"> &copy;2000-2015 nixCraft. All rights reserved. <a
+href="/tips/privacy">Privacy Policy</a> - <a
+href="/tips/disclaimer">Terms of Service</a> - <a
+href="/tips/contact-us">Questions or Comments</a><br/> The content is <a
+href="/tips/copyright">copyrighted to nixCraft</a> and may not be reproduced on other websites.</div></div><script type='text/javascript' src='http://www.cyberciti.biz/faq/wp-content/plugins/akismet/_inc/form.js?ver=3.1.1'></script>
+<script type='text/javascript' src='http://www.cyberciti.biz/faq/wp-includes/js/comment-reply.min.js?ver=4.2.2'></script>
+<script type="text/javascript">
+(function(){
+	var classes = document.getElementsByClassName('menu_control');
+	for (i = 0; i < classes.length; i++) {
+		classes[i].onclick = function() {
+			var menu = this.nextElementSibling;
+			if (/show_menu/.test(menu.className))
+				menu.className = menu.className.replace('show_menu', '').trim();
+			else
+				menu.className += ' show_menu';
+		};
+	}
+})();
+</script>
+<noscript><style type="text/css" scoped>.menu { display: block; }</style></noscript>
+<script src="http://www.cyberciti.biz/mint/?js" type="text/javascript"></script>
+<script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-108650-1']);
+  _gaq.push(['_setDomainName', 'www.cyberciti.biz']);
+  _gaq.push(['_trackPageview']);
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+
+</body>
+</html>
