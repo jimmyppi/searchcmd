@@ -2,34 +2,6 @@
 
 """
 Main entry point of the application.
-
-TODO:
-*- cli (-v --verbose -e --engine --no-cache)
-*- Prettier output, color output?
-*- cli flags have been reversed
-*- cache does not work to load from
-*- Sometimes you do not want to split on '\n' ("search replace")
-    Sometimes you do ("get process id", docker "remove stopped containers").
-    In those two examples, the output of the command is included in a code-tag.
-    tar "unpack", listing of examples in one code block. But that was in
-    pre-tag, which should always be splitted by \n.
-*- handle of when command starts with sudo
-*- print download progress (one dot per downloaded search result?),
-    x when error
-*- implement download.get
-*- support for using beautifulsoup if lxml fails
-*- cache (store in tmp), store as json? to_json/from_json for commands-
-- "or space)"
-- test example with unicode: date "set time", cyberciti.biz
-- support for more advanced prompt? um@server#find . -name "*sh*"
-- split command on pipe (|). Example: Want xargs examples, but xargs is mostly
-   invoked by piping other result to it: find ... | xargs ...
-- error handling (go to next if download fails?, logging of extraction errors?)
-- tests (py2 + py3)
-- package
-
-- should be possible to merge commands.. All with same name and same flags
-   should at least be related
 """
 import argparse
 
@@ -137,7 +109,7 @@ def search(query=None, cmd=None, search_engine='google', max_download=5):
     search_result = get(search_req)
     urls = engine.get_hits(search_result)
     docs = iter_get([Request(u.url) for u in urls[:max_download]])
-    
+
     return extract_commands(docs, base_commands=cmd)
 
 
