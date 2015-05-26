@@ -1,4 +1,3 @@
-import os
 from itertools import izip
 from unittest import TestCase
 
@@ -6,8 +5,7 @@ from testutils import iter_html_docs, get_html_doc
 from download import HtmlDocument
 from cmdextract import CommandExtractor, extract_commands
 
-TEST_DATA_DIR = os.path.join(
-    os.path.dirname(__file__), 'testdata', 'cmdextract')
+TEST_DATA_DIR = 'cmdextract'
 
 COMMANDS = {
     'http://unixmantra.com': [

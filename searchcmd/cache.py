@@ -1,3 +1,15 @@
+"""
+Simple caching of objects to file in /tmp.
+
+Usage:
+
+>>> store(obj, **{identifiers})
+>>> obj = get(**{identifiers})
+
+The object obj must only contain json serializable built-ins and
+the types in the dict TYPES.
+"""
+
 import os
 import hashlib
 import json
@@ -5,6 +17,10 @@ import errno
 
 from commands import Commands, Command
 from download import HtmlDocument, Url
+
+# Supported custom types. They must implement from_dict and to_dict
+TYPES = {cls.__name__: cls for cls in [
+    Commands, Command, HtmlDocument, Url]}
 
 CACHE_DIR = os.path.sep.join(['', 'tmp', 'searchcmd'])
 try:
@@ -29,16 +45,15 @@ def store(commands, **args):
 
 
 def get_file_name(**args):
-    return os.path.join(CACHE_DIR, hashlib.sha1(repr(args.items())).hexdigest())
+    return os.path.join(
+        CACHE_DIR, hashlib.sha1(repr(args.items())).hexdigest())
 
 
-TYPES = {cls.__name__: cls for cls in [
-    Commands, Command, HtmlDocument, Url]}
-
-# TODO: Give credit to stackoverflow answer
 class CustomTypeEncoder(json.JSONEncoder):
     """A custom JSONEncoder class that knows how to encode core custom
     objects.
+
+    Inspired by: http://stackoverflow.com/a/2343640/2874515
 
     Custom objects are encoded as JSON object literals (ie, dicts) with
     one key, '__TypeName__' where 'TypeName' is the actual name of the

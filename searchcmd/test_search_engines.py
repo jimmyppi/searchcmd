@@ -1,11 +1,9 @@
-import os
 from unittest import TestCase
 
 from testutils import get_html_doc
 from search_engines import get_engine
 
-TEST_DATA_DIR = os.path.join(
-    os.path.dirname(__file__), 'testdata', 'search_engines')
+TEST_DATA_DIR = 'search_engines'
 
 
 class TestSearchEngines(TestCase):

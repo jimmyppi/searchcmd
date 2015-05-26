@@ -72,11 +72,12 @@ class Command(object):
         nr_docs = float(nr_docs)
         score = 0.0
         for line, doc in zip(self.lines, self.docs):
-            score += (1 - line/doc.nr_lines)*(1 - doc.idx/nr_docs)
+            score += (doc.nr_lines/(doc.nr_lines + line - 1)) * \
+                     (nr_docs/(nr_docs + doc.idx - 1))
         return score
 
     def __repr__(self):
-        return u'<cmd {}>'.format(self.cmd)
+        return '<cmd {}>'.format(self.cmd.encode('utf-8'))
 
 
 class Commands(object):
@@ -93,12 +94,12 @@ class Commands(object):
 
     def rank_commands(self, nr=5):
         cmds = [(cmd.score(self.nr_docs), cmd)
-                for cmd in self.commands.itervalues()]
+                for cmd in self]
         cmds.sort(reverse=True)
         return [cmd for _, cmd in cmds[:nr]]
 
     def __iter__(self):
-        for command in self.commands.values():
+        for command in self.commands.itervalues():
             yield command
 
     def to_dict(self):
