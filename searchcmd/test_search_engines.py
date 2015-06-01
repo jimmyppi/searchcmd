@@ -42,7 +42,8 @@ class TestSearchEngines(TestCase):
 
     def _test_engine(self, engine, expected_urls):
         e = get_engine(engine)
-        req = e.get_search_request('test')
+        req = e.get_search_request('test query')
+        self.assertTrue('test+query' in req.url)
 
         doc = get_html_doc(TEST_DATA_DIR, '%s.com' % engine)
 
