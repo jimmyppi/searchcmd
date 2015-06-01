@@ -68,7 +68,7 @@ class HtmlDocument(object):
 
     @property
     def tree(self):
-        if self._tree:
+        if self._tree is not None:
             return self._tree
         try:
             self._tree = fromstring(self.body, base_url=self.url.url)

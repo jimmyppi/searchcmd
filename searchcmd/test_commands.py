@@ -34,4 +34,3 @@ class TestCommands(TestCase):
             cmd_copy = Command.from_dict(cmd.to_dict())
             self.assertEqual(cmd_copy, cmd)
 
-        self.assertFalse(True)
