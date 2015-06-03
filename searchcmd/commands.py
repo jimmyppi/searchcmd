@@ -72,8 +72,8 @@ class Command(object):
         nr_docs = float(nr_docs)
         score = 0.0
         for line, doc in zip(self.lines, self.docs):
-            score += (doc.nr_lines/(doc.nr_lines + line - 1)) * \
-                     (nr_docs/(nr_docs + doc.idx - 1))
+            score += (doc.nr_lines/(doc.nr_lines + line)) * \
+                     (nr_docs/(nr_docs + doc.idx))
         return score
 
     def __repr__(self):

@@ -1,5 +1,4 @@
 #!/usr/bin/python
-
 """
 Main entry point of the application.
 """
@@ -42,49 +41,18 @@ def get_arg_parser():
 def main(args=None):
     """
     Args:
-       args (): Parsed command line.
+       args (list): Command line arguments.
 
-    Some assumptions are made about args.query:
-
-    * If only one element in the query and the element contains only one
-       word, assume that it is a command and we want to see general examples
-       of how to use this command.
-
-    args.query == ['find'] => cmd == 'find', query == None
-
-    * If only one element in query and the element contains more than one
-       word, assume that it is a description of what we want to do and the
-       exact command is unknown.
-
-    args.query == ['search replace'] => cmd == None, query == 'search replace'
-
-    * If more than one element in query, assume that the last element is
-       a description of what we want to do and the elements before define the
-       command.
-
-    args.query == ['git', 'commit', 'change last commit message'] =>
-       cmd == 'git commit', query == 'change last commit message'
     """
-    if not args:
-        parser = get_arg_parser()
-        args = parser.parse_args()
+    parser = get_arg_parser()
+    args = parser.parse_args(args)
 
-    orig_query = args.query
+    query_string, cmd = get_query_string(args.query)
 
-    if len(orig_query) == 1:
-        orig_query = orig_query[0]
-        if len(orig_query.split()) == 1:
-            cmd = orig_query
-            query = None
-        else:
-            cmd = None
-            query = orig_query
-    else:
-        cmd = ' '.join(orig_query[:-1])
-        query = orig_query[-1]
-
-    search_args = dict(query=query, cmd=cmd, search_engine=args.engine,
-                       max_download=args.max_download)
+    search_args = {'query_string': query_string,
+                   'cmd': cmd,
+                   'search_engine': args.engine,
+                   'max_download': args.max_download}
     commands = None
     if not args.no_cache:
         commands = cache.get(**search_args)
@@ -93,19 +61,62 @@ def main(args=None):
     cache.store(commands, **search_args)
 
     for cmd in commands.rank_commands(nr=args.max_hits):
-        print cmd.echo(verbose=args.verbose)
+        print cmd.echo(verbose=args.verbose).encode('utf-8')
 
 
-def search(query=None, cmd=None, search_engine='google', max_download=5):
-    if not cmd and not query:
-        raise ValueError('At least one of query and cmd are needed')
-    if not query:
-        query = 'examples'
-    query = ' '.join([part for part in ['linux', cmd, query] if part])
+def parse_query(orig_query):
+    """Divide query into command name and search query.
 
+    Args:
+       orig_query ([str]): The original query.
+    Returns:
+       (str, str): Command name and search query.
+
+    Some assumptions are made about the original query:
+
+    * If only one element in the orig query and the element contains only one
+      word, assume that it is a command and we want to see general examples
+      of how to use this command.
+
+      Example:
+      parse_query(['find']) == ('find', 'examples')
+
+    * If only one element in the orig query and the element contains more
+      than one word, assume that it is a description of what we want to do
+      and the exact command is unknown.
+
+      Example:
+      parse_query(['search replace']) == (None, 'search replace')
+
+    * If more than one element in query, assume that the last element is
+      a description of what we want to do and the elements before define the
+      command.
+
+      Example:
+      parse_query(['git', 'commit', 'change last commit message']) == (
+         'git commit', 'change last commit message')
+    """
+    if len(orig_query) == 1:
+        orig_query = orig_query[0]
+        if len(orig_query.split()) == 1:
+            return orig_query, 'examples'
+        else:
+            return None, orig_query
+    else:
+        return ' '.join(orig_query[:-1]), orig_query[-1]
+
+
+def get_query_string(orig_query):
+    if not orig_query:
+        raise ValueError('No query provided')
+    cmd, query = parse_query(orig_query)
+    return ' '.join([part for part in ['linux', cmd, query] if part]), cmd
+
+
+def search(query_string=None, cmd=None, search_engine='google',
+           max_download=5):
     engine = get_engine(search_engine)
-    search_req = engine.get_search_request(query)
-
+    search_req = engine.get_search_request(query_string)
     search_result = get(search_req)
     urls = engine.get_hits(search_result)
     docs = iter_get([Request(u.url) for u in urls[:max_download]])
