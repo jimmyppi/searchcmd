@@ -1,13 +1,14 @@
 import sys
-from io import BytesIO
+from io import StringIO, BytesIO
 from unittest import TestCase
 
 import requests_mock
 
-from commands import Commands
-from testutils import get_html_doc
-from search_engines import get_engine
+from searchcmd.commands import Commands
+from tests.testutils import get_html_doc
+from searchcmd.search_engines import get_engine
 import searchcmd
+
 main = searchcmd.main
 
 
@@ -15,7 +16,10 @@ class TestSearchCommand(TestCase):
 
     def setUp(self):
         self.orig_stdout = sys.stdout
-        self.internal_stdout = BytesIO()
+        if sys.version_info[0] == 2:
+            self.internal_stdout = BytesIO()
+        else:
+            self.internal_stdout = StringIO()
         sys.stdout = self.internal_stdout
 
     def tearDown(self):

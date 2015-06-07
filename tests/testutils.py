@@ -1,5 +1,5 @@
 import os
-from download import HtmlDocument
+from searchcmd.download import HtmlDocument
 
 BASE_DATA_DIR = os.path.join(os.path.dirname(__file__), 'testdata')
 
@@ -10,7 +10,7 @@ def iter_html_docs(data_dir):
 
 
 def get_html_doc(data_dir, fname):
-    with open(os.path.join(BASE_DATA_DIR, data_dir, fname)) as inp:
+    with open(os.path.join(BASE_DATA_DIR, data_dir, fname), 'rb') as inp:
         body = inp.read()
     base_url = 'http://%s' % fname
     return HtmlDocument(base_url, body)

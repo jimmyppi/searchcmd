@@ -1,7 +1,7 @@
 from unittest import TestCase
 
-from testutils import get_html_doc
-from search_engines import get_engine
+from tests.testutils import get_html_doc
+from searchcmd.search_engines import get_engine
 
 TEST_DATA_DIR = 'search_engines'
 

@@ -1,8 +1,8 @@
 from unittest import TestCase
 import requests_mock
 
-import download
-from testutils import get_html_doc, iter_html_docs
+from searchcmd import download
+from tests.testutils import get_html_doc, iter_html_docs
 
 
 class TestDownload(TestCase):
@@ -11,7 +11,7 @@ class TestDownload(TestCase):
         doc = get_html_doc('search_engines', 'google.com')
         req = download.Request(doc.url.url)
         with requests_mock.mock() as m:
-            m.get(req.url, text=doc.body)
+            m.get(req.url, content=doc.body)
             resp = download.get(req)
             self.assertIsInstance(resp, download.HtmlDocument)
             self.assertEqual(resp.body, doc.body)
@@ -45,4 +45,4 @@ class TestDownload(TestCase):
             self.assertTrue(doc.tree.tag)
 
         doc_cp = download.HtmlDocument.from_dict(doc.to_dict())
-        self.assertEqual(doc_cp.tree.tag, doc.tree.tag)
+        self.assertEqual(doc_cp.url.url, doc.url.url)

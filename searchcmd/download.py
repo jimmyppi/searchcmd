@@ -1,10 +1,17 @@
 import re
 import sys
-from urlparse import urlparse
+try:
+    from urllib.parse import urlparse
+except ImportError:
+    from urlparse import urlparse
 from concurrent.futures import as_completed
 
 from requests_futures.sessions import FuturesSession
-from lxml.html import fromstring, tostring, soupparser
+from lxml.html import fromstring, tostring
+try:
+    from lxml.html import soupparser
+except ImportError:
+    soupparser = None
 import tld
 
 
@@ -16,7 +23,7 @@ def get(request):
         return DownloadError(request, future.exception())
     else:
         resp = future.result()
-        return HtmlDocument(resp.url, resp.text)
+        return HtmlDocument(resp.url, resp.content)
 
 
 def iter_get(requests, verbose=True):
@@ -39,9 +46,9 @@ def iter_get(requests, verbose=True):
             if verbose:
                 sys.stdout.write('.')
                 sys.stdout.flush()
-            yield HtmlDocument(resp.url, resp.text, idx)
+            yield HtmlDocument(resp.url, resp.content, idx)
     if verbose:
-        print
+        sys.stdout.write('\n')
 
 
 class DownloadError(object):
@@ -62,7 +69,7 @@ class HtmlDocument(object):
     def __init__(self, url, body, idx=None):
         self.url = Url(url)
         self.body = body
-        self.nr_lines = float(len(body.split('\n')))
+        self.nr_lines = float(len(body.split(b'\n')))
         self.idx = idx
         self._tree = None
 
@@ -82,12 +89,12 @@ class HtmlDocument(object):
 
     def to_dict(self):
         return {'url': self.url.url,
-                'body': self.body,
+                #'body': self.body,
                 'idx': self.idx}
 
     @classmethod
     def from_dict(cls, d):
-        return cls(d['url'], d['body'], d['idx'])
+        return cls(d['url'], b'', d['idx'])
 
 
 class Url(object):

@@ -1,7 +1,7 @@
 from unittest import TestCase
 
-from testutils import get_html_doc, iter_html_docs
-import cache
+from tests.testutils import get_html_doc, iter_html_docs
+from searchcmd import cache
 
 
 class TestCache(TestCase):

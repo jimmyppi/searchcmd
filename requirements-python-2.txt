@@ -1,0 +1,8 @@
+futures
+requests
+requests-futures
+lxml
+cssselect
+beautifulsoup
+pygments
+tld

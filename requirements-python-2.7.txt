@@ -1,5 +1,0 @@
-futures
-requests
-lxml
-pygments
-tld

@@ -3,8 +3,8 @@ from collections import defaultdict
 
 from lxml import etree
 
-from commands import Command, Commands
-from download import HtmlDocument
+from searchcmd.commands import Command, Commands
+from searchcmd.download import HtmlDocument
 
 
 def extract_commands(html_docs, base_commands=None):
@@ -43,7 +43,7 @@ def extract_commands(html_docs, base_commands=None):
     for command in commands:
         commands_by_name[command.name].append(command)
     keep = {}
-    for coms in commands_by_name.itervalues():
+    for coms in commands_by_name.values():
         if len(coms) > 1 or len(coms[0].lines) > 1:
             for com in coms:
                 keep[com.cmd] = com
@@ -94,7 +94,7 @@ class CommandExtractor(object):
     MAX_CONSECUTIVELY_LETTER_WORDS = 2
 
     def __init__(self, base_commands=None):
-        if isinstance(base_commands, basestring):
+        if isinstance(base_commands, str):
             base_commands = [base_commands]
         if base_commands:
             base_commands = set(base_commands)

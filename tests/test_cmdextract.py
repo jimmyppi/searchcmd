@@ -1,9 +1,12 @@
-from itertools import izip
+try:
+    from itertools import izip as zip
+except ImportError:
+    pass
 from unittest import TestCase
 
-from testutils import iter_html_docs, get_html_doc
-from download import HtmlDocument
-from cmdextract import CommandExtractor, extract_commands
+from tests.testutils import iter_html_docs, get_html_doc
+from searchcmd.download import HtmlDocument
+from searchcmd.cmdextract import CommandExtractor, extract_commands
 
 TEST_DATA_DIR = 'cmdextract'
 
@@ -169,7 +172,7 @@ class TestCommandExtract(TestCase):
             get_html_doc(TEST_DATA_DIR, 'stackoverflow.com'), 'xargs')
         self.assertEqual(cmds.commands, {})
 
-        doc = HtmlDocument('http://stackoverflow.com', '')
+        doc = HtmlDocument('http://stackoverflow.com', b'')
         doc.body = None
         cmds = extract_commands(doc)
         self.assertEqual(cmds.nr_docs, 0)
@@ -177,7 +180,7 @@ class TestCommandExtract(TestCase):
     def test_iter_texts(self):
         extractor = CommandExtractor()
         for doc in iter_html_docs(TEST_DATA_DIR):
-            print doc.url.url
+            print(doc.url.url)
             nr_txts = 0
             for line, txt in extractor.iter_text_lines(doc):
                 nr_txts += 1
@@ -186,9 +189,9 @@ class TestCommandExtract(TestCase):
     def test_iter_commands(self):
         extractor = CommandExtractor()
         for doc in iter_html_docs(TEST_DATA_DIR):
-            print doc.url.url
-            for (line, cmd), correct in izip(extractor.iter_commands(doc),
-                                             COMMANDS[doc.url.url]):
+            print(doc.url.url)
+            for (line, cmd), correct in zip(extractor.iter_commands(doc),
+                                            COMMANDS[doc.url.url]):
                 self.assertEqual((line, cmd), correct)
 
     def test_get_command(self):

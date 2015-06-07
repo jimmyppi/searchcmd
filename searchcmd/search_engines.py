@@ -14,12 +14,15 @@ Extract urls:
 """
 
 import re
-import urllib
+try:
+    from urllib import quote_plus, unquote
+except ImportError:
+    from urllib.parse import quote_plus, unquote
 from collections import defaultdict
 
 from lxml import html
 
-from download import Url, Request
+from searchcmd.download import Url, Request
 
 
 def get_engine(name):
@@ -35,7 +38,7 @@ class SearchEngine(object):
     RE_URL_AS_PARAM = re.compile(r'http[^&]+')
 
     def get_search_request(self, query):
-        url = self.BASE_URL.format(urllib.quote_plus(query.encode('utf-8')))
+        url = self.BASE_URL.format(quote_plus(query.encode('utf-8')))
         return Request(url=url)
 
     def get_id(self, tree):
@@ -63,7 +66,7 @@ class SearchEngine(object):
             m = self.RE_URL_AS_PARAM.search(url)
             if not m:
                 return
-            url = urllib.unquote(m.group(0))
+            url = unquote(m.group(0))
         u = Url(url)
         if self.RE_INTERNAL_DOMAINS.search(u.domain):
             return
@@ -84,7 +87,7 @@ class SearchEngine(object):
                 continue
             groups[self.get_path(link)].append(url)
         # Skip groups where all urls have the same base domain
-        for path, urls in groups.items():
+        for path, urls in list(groups.items()):
             if len(set((u.base_domain for u in urls))) == 1:
                 groups.pop(path)
         # Return the largest group of urls

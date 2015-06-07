@@ -61,7 +61,7 @@ class Command(object):
         """
         cmd = highlight(self.cmd, LEXER, FORMATTER).strip()
         domains = u'({})'.format(
-            ', '.join(d for d,_ in self.domains.most_common(2)))
+            u', '.join(d for d,_ in self.domains.most_common(2)))
         s = u'{}\t{}'.format(cmd, domains)
         if verbose:
             s += u'\n {}'.format(
@@ -99,7 +99,7 @@ class Commands(object):
         return [cmd for _, cmd in cmds[:nr]]
 
     def __iter__(self):
-        for command in self.commands.itervalues():
+        for command in self.commands.values():
             yield command
 
     def to_dict(self):

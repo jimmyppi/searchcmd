@@ -1,7 +1,7 @@
 from unittest import TestCase
 
-from commands import Command, Commands
-from download import HtmlDocument
+from searchcmd.commands import Command, Commands
+from searchcmd.download import HtmlDocument
 
 
 class TestCommands(TestCase):
@@ -9,7 +9,7 @@ class TestCommands(TestCase):
     def test_commands(self):
 
         cmds = Commands()
-        doc = HtmlDocument('http://example.com', '', 1)
+        doc = HtmlDocument('http://example.com', b'', 1)
         cmd = Command('ls', 1, 1, doc)
         cmds.add_command(cmd)
         cmd = Command(u'grep \u201ctest\u2033', 5, 2, doc)
@@ -27,7 +27,7 @@ class TestCommands(TestCase):
         for cmd in ranked:
             cmd.echo()
             cmd.echo(verbose=True)
-            print repr(cmd)
+            print(repr(cmd))
 
         cmds = Commands.from_dict(cmds.to_dict())
         for cmd in ranked:

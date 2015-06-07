@@ -15,8 +15,8 @@ import hashlib
 import json
 import errno
 
-from commands import Commands, Command
-from download import HtmlDocument, Url
+from searchcmd.commands import Commands, Command
+from searchcmd.download import HtmlDocument, Url
 
 # Supported custom types. They must implement from_dict and to_dict
 TYPES = {cls.__name__: cls for cls in [
@@ -46,7 +46,8 @@ def store(commands, **args):
 
 def get_file_name(**args):
     return os.path.join(
-        CACHE_DIR, hashlib.sha1(repr(args.items())).hexdigest())
+        CACHE_DIR, hashlib.sha1(
+            repr(args.items()).encode('utf-8')).hexdigest())
 
 
 class CustomTypeEncoder(json.JSONEncoder):
@@ -76,12 +77,12 @@ class CustomTypeDecoder(json.JSONDecoder):
                 return [load_objects(e) for e in obj]
             elif isinstance(obj, dict):
                 if len(obj) == 1:
-                    type_name, value = obj.items()[0]
+                    type_name, value = list(obj.items())[0]
                     type_name = type_name.strip('_')
                     if type_name in TYPES:
                         return TYPES[type_name].from_dict(load_objects(value))
                 return {key: load_objects(value)
-                        for key, value in obj.iteritems()}
+                        for key, value in obj.items()}
             else:
                 return obj
 
