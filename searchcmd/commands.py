@@ -1,8 +1,9 @@
+from operator import itemgetter
+from collections import Counter
+
 from pygments import highlight
 from pygments.lexers import BashLexer
 from pygments.formatters import TerminalFormatter
-
-from collections import Counter
 
 LEXER = BashLexer()
 FORMATTER = TerminalFormatter()
@@ -95,7 +96,7 @@ class Commands(object):
     def rank_commands(self, nr=5):
         cmds = [(cmd.score(self.nr_docs), cmd)
                 for cmd in self]
-        cmds.sort(reverse=True)
+        cmds.sort(key=itemgetter(0), reverse=True)
         return [cmd for _, cmd in cmds[:nr]]
 
     def __iter__(self):

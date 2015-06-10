@@ -1,12 +1,10 @@
 TODO
 ====
-* support for more advanced prompt? um@server#find . -name "*sh*"
-* "or space)"-
-* error handling (go to next if download fails?, logging of extraction errors?)
-* tests (py2 + py3)
-* package
-* should be possible to merge commands.. All with same name and same flags
-   should at least be related
+* Support for more advanced prompt. Example: um@server#find . -name "*sh*"
+* Many false positives. Example: "or space)"
+* Should be possible to merge commands. All with same name and same flags
+  should at least be related.
+* Support for beautifulsoup in py3.
 
 DONE
 ====
@@ -19,12 +17,14 @@ DONE
    In those two examples, the output of the command is included in a code-tag.
    tar "unpack", listing of examples in one code block. But that was in
    pre-tag, which should always be splitted by \n.
-* handle of when command starts with sudo
-* print download progress (one dot per downloaded search result?),
+* Handle of when command starts with sudo
+* Print download progress (one dot per downloaded search result?),
    x when error
-* implement download.get
-* support for using beautifulsoup if lxml fails
+* Implement download.get
+* Support for using beautifulsoup if lxml fails
 * cache (store in tmp), store as json? to_json/from_json for commands-
-* test example with unicode: date "set time", cyberciti.biz
-* split command on pipe (|). Example: Want xargs examples, but xargs is mostly
+* Test example with unicode: date "set time", cyberciti.biz
+* Split command on pipe (|). Example: Want xargs examples, but xargs is mostly
    invoked by piping other result to it: find ... | xargs ...
+* Tests (py2 + py3)
+* Package

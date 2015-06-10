@@ -1,10 +1,11 @@
 import sys
-from io import StringIO, BytesIO
+from io import StringIO
 from unittest import TestCase
 
 import requests_mock
 
-from searchcmd.commands import Commands
+from searchcmd.commands import Commands, Command
+from searchcmd.download import HtmlDocument
 from tests.testutils import get_html_doc
 from searchcmd.search_engines import get_engine
 import searchcmd
@@ -16,14 +17,27 @@ class TestSearchCommand(TestCase):
 
     def setUp(self):
         self.orig_stdout = sys.stdout
-        if sys.version_info[0] == 2:
-            self.internal_stdout = BytesIO()
-        else:
-            self.internal_stdout = StringIO()
+        self.internal_stdout = StringIO()
         sys.stdout = self.internal_stdout
+        searchcmd.print_func = searchcmd.get_print_func()
 
     def tearDown(self):
         sys.stdout = self.orig_stdout
+
+    def test_print(self):
+        sys.stdout = self.orig_stdout
+        searchcmd.print_func = searchcmd.get_print_func()
+
+        def mock_search(query_string=None, cmd=None, **kwargs):
+            coms = Commands()
+            cmd = u'git commit \u2013amend -m \u2018new message\u2019'
+            doc = HtmlDocument(u'http://example.com', b'', 1)
+            coms.add_command(Command(cmd, 1, 1, doc))
+            return coms
+
+        orig_search = searchcmd.search
+        searchcmd.search = mock_search
+        main(['git commit', '--no-cache'])
 
     def test_query(self):
         self.result = None

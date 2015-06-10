@@ -130,7 +130,9 @@ class CommandExtractor(object):
             return True
         cmds = line.split(' | ')
         for cmd in cmds:
-            if cmd.split()[0] in self.wanted_commands:
+            cmd = cmd.strip()
+            if any((cmd.startswith(wanted)
+                    for wanted in self.wanted_commands)):
                 return True
         return False
 
@@ -224,6 +226,8 @@ class CommandExtractor(object):
                         yield first_line + line, txt_line
 
     def skip_tree(self, tree):
+        if tree.tag == 'a' and tree.attrib.get('href'):
+            return True
         return tree.tag in self.IGNORE_TAGS
 
     def fix_space(self, txt):

@@ -47,7 +47,7 @@ def store(commands, **args):
 def get_file_name(**args):
     return os.path.join(
         CACHE_DIR, hashlib.sha1(
-            repr(args.items()).encode('utf-8')).hexdigest())
+            repr(sorted(args.items())).encode('utf-8')).hexdigest())
 
 
 class CustomTypeEncoder(json.JSONEncoder):

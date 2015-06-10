@@ -18,7 +18,6 @@ def get_requirements(file_name):
         requirements = [req.strip() for req in req_file.read().split('\n')]
     return [req for req in requirements if req and not req.startswith('-')]
 
-print(os.listdir('.'))
 if sys.version_info[0] == 2:
     requirements = get_requirements('requirements-python-2.txt')
 else:
@@ -51,7 +50,7 @@ setup(
     install_requires=requirements,
     license='lite BSD',
     entry_points={
-        'console_scripts': ['searchcmd = searchcmd.searchcmd:main']
+        'console_scripts': ['searchcmd = searchcmd:main']
     },
     tests_require=['pytest', 'requests_mock'],
     cmdclass={'test': PyTest},

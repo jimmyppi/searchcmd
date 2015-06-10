@@ -98,10 +98,10 @@ COMMANDS = {
         (24, 'du -h -s *')]
 }
 
-NR_TEXTS = {'http://unixmantra.com': 400,
-            'http://brunolinux.com': 61,
-            'http://cyberciti.biz': 1042,
-            'http://stackoverflow.com': 55}
+NR_TEXTS = {'http://unixmantra.com': 225,
+            'http://brunolinux.com': 47,
+            'http://cyberciti.biz': 705,
+            'http://stackoverflow.com': 49}
 
 MERGED_COMMANDS = set([
     u'find ./music -name "*.mp3" -print0 | xargs -0 ls',
@@ -223,6 +223,12 @@ class TestCommandExtract(TestCase):
             u'du -h -s *'))
         self.assertFalse(ext.has_wanted_command(
             u'ls -hl'))
+
+        ext = CommandExtractor(['git commit'])
+        self.assertTrue(ext.has_wanted_command(
+            u'git commit --amend'))
+        self.assertFalse(ext.has_wanted_command(
+            u'git pull origin master'))
 
     def test_is_command_name(self):
         ext = CommandExtractor()

@@ -1,5 +1,3 @@
-futures
-requests
 requests-futures
 lxml
 cssselect

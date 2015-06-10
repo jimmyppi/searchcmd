@@ -6,6 +6,7 @@ except ImportError:
     from urlparse import urlparse
 from concurrent.futures import as_completed
 
+from requests.packages import urllib3
 from requests_futures.sessions import FuturesSession
 from lxml.html import fromstring, tostring
 try:
@@ -13,6 +14,8 @@ try:
 except ImportError:
     soupparser = None
 import tld
+
+urllib3.disable_warnings()
 
 
 def get(request):
@@ -37,18 +40,18 @@ def iter_get(requests, verbose=True):
         if future.exception() is not None:
             req, idx = futures_to_req[future]
             if verbose:
-                sys.stdout.write('x')
+                sys.stdout.writelines(u'x')
                 sys.stdout.flush()
             yield DownloadError(req, future.exception(), idx)
         else:
             resp = future.result()
             _, idx = futures_to_req[future]
             if verbose:
-                sys.stdout.write('.')
+                sys.stdout.writelines(u'.')
                 sys.stdout.flush()
             yield HtmlDocument(resp.url, resp.content, idx)
     if verbose:
-        sys.stdout.write('\n')
+        sys.stdout.writelines(u'\n')
 
 
 class DownloadError(object):

@@ -10,12 +10,19 @@ from searchcmd.cmdextract import extract_commands
 from searchcmd.download import get, iter_get, Request
 from searchcmd import cache
 
-
 EXAMPLES = """Examples:
 searchcmd git commit "change last commit message"
 searchcmd find directory
 searchcmd "search replace"
 """
+
+
+def get_print_func():
+    if sys.version_info[0] == 2:
+        return sys.stdout.write
+    else:
+        return sys.stdout.writelines
+print_func = get_print_func()
 
 
 def get_arg_parser():
@@ -60,10 +67,7 @@ def main(args=None):
     cache.store(commands, **search_args)
 
     for cmd in commands.rank_commands(nr=args.max_hits):
-        if sys.version_info[0] == 2:
-            print(cmd.echo(verbose=args.verbose).encode('utf-8'))
-        else:
-            print(cmd.echo(verbose=args.verbose))
+        print_func(cmd.echo(verbose=args.verbose) + u'\n')
 
 
 def parse_query(orig_query):
