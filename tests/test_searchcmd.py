@@ -16,17 +16,17 @@ main = searchcmd.main
 class TestSearchCommand(TestCase):
 
     def setUp(self):
-        self.orig_stdout = sys.stdout
         self.internal_stdout = StringIO()
-        sys.stdout = self.internal_stdout
-        searchcmd.print_func = searchcmd.get_print_func()
+        self.internal_stderr = StringIO()
+        searchcmd.stdout = searchcmd.get_print_func(self.internal_stdout)
+        searchcmd.stderr = searchcmd.get_print_func(self.internal_stderr)
 
     def tearDown(self):
-        sys.stdout = self.orig_stdout
+        searchcmd.stdout = searchcmd.get_print_func(sys.stdout)
+        searchcmd.stderr = searchcmd.get_print_func(sys.stderr)
 
     def test_print(self):
-        sys.stdout = self.orig_stdout
-        searchcmd.print_func = searchcmd.get_print_func()
+        searchcmd.stdout = searchcmd.get_print_func(sys.stdout)
 
         def mock_search(query_string=None, cmd=None, **kwargs):
             coms = Commands()
@@ -37,7 +37,17 @@ class TestSearchCommand(TestCase):
 
         orig_search = searchcmd.search
         searchcmd.search = mock_search
-        main(['git commit', '--no-cache'])
+        try:
+            main(['git commit', '--no-cache'])
+        finally:
+            searchcmd.search = orig_search
+
+    def test_search_engine_error(self):
+        searchcmd.stdout = searchcmd.get_print_func(sys.stdout)
+        searchcmd.stderr = searchcmd.get_print_func(sys.stderr)
+        with requests_mock.mock() as m:
+            exit_code = main(['find', '--no-cache'])
+            self.assertNotEqual(exit_code, 0)
 
     def test_query(self):
         self.result = None

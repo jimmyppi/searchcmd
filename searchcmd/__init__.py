@@ -7,7 +7,7 @@ import argparse
 
 from searchcmd.search_engines import get_engine, ENGINES
 from searchcmd.cmdextract import extract_commands
-from searchcmd.download import get, iter_get, Request
+from searchcmd.download import get, iter_get, Request, DownloadError
 from searchcmd import cache
 
 EXAMPLES = """Examples:
@@ -17,12 +17,21 @@ searchcmd "search replace"
 """
 
 
-def get_print_func():
+def get_print_func(io):
+    """This is a workaround go get mocking of stdout to work with
+    both py2 and py3.
+    """
     if sys.version_info[0] == 2:
-        return sys.stdout.write
+        return io.write
     else:
-        return sys.stdout.writelines
-print_func = get_print_func()
+        return io.writelines
+
+stdout = get_print_func(sys.stdout)
+stderr = get_print_func(sys.stderr)
+
+
+class SearchError(Exception):
+    pass
 
 
 def get_arg_parser():
@@ -30,7 +39,7 @@ def get_arg_parser():
         epilog=EXAMPLES, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument(
         'query', nargs='+',
-        help="Type a command and/or describe what you want in quotes.")
+        help="Type a command and/or describe what you want to do in quotes.")
     parser.add_argument('-v', '--verbose', action='store_true',
                         help='Include source url in output.')
     parser.add_argument('--no-cache', action='store_true',
@@ -48,7 +57,8 @@ def main(args=None):
     """
     Args:
        args (list): Command line arguments.
-
+    Returns:
+       int: exit code.
     """
     parser = get_arg_parser()
     args = parser.parse_args(args)
@@ -63,11 +73,15 @@ def main(args=None):
     if not args.no_cache:
         commands = cache.get(**search_args)
     if commands is None:
-        commands = search(**search_args)
+        try:
+            commands = search(**search_args)
+        except SearchError as e:
+            stderr(str(e) + u'\n')
+            return 1
     cache.store(commands, **search_args)
-
     for cmd in commands.rank_commands(nr=args.max_hits):
-        print_func(cmd.echo(verbose=args.verbose) + u'\n')
+        stdout(cmd.echo(verbose=args.verbose) + u'\n')
+    return 0
 
 
 def parse_query(orig_query):
@@ -124,6 +138,9 @@ def search(query_string=None, cmd=None, search_engine='google',
     engine = get_engine(search_engine)
     search_req = engine.get_search_request(query_string)
     search_result = get(search_req)
+    if isinstance(search_result, DownloadError):
+        raise SearchError('Failed search on {} ({})'.format(
+            search_engine, search_result.status_code))
     urls = engine.get_hits(search_result)
     docs = iter_get([Request(u.url) for u in urls[:max_download]])
 
@@ -131,4 +148,4 @@ def search(query_string=None, cmd=None, search_engine='google',
 
 
 if __name__ == '__main__':
-    main()
+    sys.exit(main())
