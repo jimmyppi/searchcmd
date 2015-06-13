@@ -1,11 +1,21 @@
 import re
 import sys
-from urlparse import urlparse
+try:
+    from urllib.parse import urlparse
+except ImportError:
+    from urlparse import urlparse
 from concurrent.futures import as_completed
 
+from requests.packages import urllib3
 from requests_futures.sessions import FuturesSession
-from lxml.html import fromstring, tostring, soupparser
+from lxml.html import fromstring, tostring
+try:
+    from lxml.html import soupparser
+except ImportError:
+    soupparser = None
 import tld
+
+urllib3.disable_warnings()
 
 
 def get(request):
@@ -16,7 +26,7 @@ def get(request):
         return DownloadError(request, future.exception())
     else:
         resp = future.result()
-        return HtmlDocument(resp.url, resp.text)
+        return HtmlDocument(resp.url, resp.content)
 
 
 def iter_get(requests, verbose=True):
@@ -30,18 +40,18 @@ def iter_get(requests, verbose=True):
         if future.exception() is not None:
             req, idx = futures_to_req[future]
             if verbose:
-                sys.stdout.write('x')
+                sys.stdout.writelines(u'x')
                 sys.stdout.flush()
             yield DownloadError(req, future.exception(), idx)
         else:
             resp = future.result()
             _, idx = futures_to_req[future]
             if verbose:
-                sys.stdout.write('.')
+                sys.stdout.writelines(u'.')
                 sys.stdout.flush()
-            yield HtmlDocument(resp.url, resp.text, idx)
+            yield HtmlDocument(resp.url, resp.content, idx)
     if verbose:
-        print
+        sys.stdout.writelines(u'\n')
 
 
 class DownloadError(object):
@@ -49,6 +59,9 @@ class DownloadError(object):
         self.request = request
         self.idx = idx
         self.err = err
+        self.status_code = None
+        if hasattr(err, 'status_code'):
+            self.status_code = err.status_code
 
 
 class Request(object):
@@ -59,10 +72,12 @@ class Request(object):
 
 
 class HtmlDocument(object):
-    def __init__(self, url, body, idx=None):
+    def __init__(self, url, body, idx=None, nr_lines=None):
         self.url = Url(url)
         self.body = body
-        self.nr_lines = float(len(body.split('\n')))
+        self.nr_lines = nr_lines
+        if self.nr_lines is None:
+            self.nr_lines = float(len(body.split(b'\n')))
         self.idx = idx
         self._tree = None
 
@@ -82,12 +97,12 @@ class HtmlDocument(object):
 
     def to_dict(self):
         return {'url': self.url.url,
-                'body': self.body,
+                'nr_lines': self.nr_lines,
                 'idx': self.idx}
 
     @classmethod
     def from_dict(cls, d):
-        return cls(d['url'], d['body'], d['idx'])
+        return cls(d['url'], b'', d['idx'], d['nr_lines'])
 
 
 class Url(object):

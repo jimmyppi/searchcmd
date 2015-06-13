@@ -1,10 +1,19 @@
 import re
+import subprocess
 from collections import defaultdict
 
 from lxml import etree
 
-from commands import Command, Commands
-from download import HtmlDocument
+from searchcmd.commands import Command, Commands
+from searchcmd.download import HtmlDocument
+
+
+def list_available_commands():
+    """Return list of available commands on this computer."""
+    return [cmd for cmd in subprocess.check_output(
+        'compgen -abc', shell=True, executable='/bin/bash').decode().split()
+            if cmd and cmd[0].isalnum()]
+ALL_COMMANDS = list_available_commands()
 
 
 def extract_commands(html_docs, base_commands=None):
@@ -15,7 +24,7 @@ def extract_commands(html_docs, base_commands=None):
        base_commands (str or iterable of str): If provided, limit the results
          to these commands.
     Returns:
-       commands (Commands): The extracted command lines.
+       commands (Commands): Collection of found command examples.
     """
     if isinstance(html_docs, HtmlDocument):
         html_docs = [html_docs]
@@ -43,7 +52,7 @@ def extract_commands(html_docs, base_commands=None):
     for command in commands:
         commands_by_name[command.name].append(command)
     keep = {}
-    for coms in commands_by_name.itervalues():
+    for coms in commands_by_name.values():
         if len(coms) > 1 or len(coms[0].lines) > 1:
             for com in coms:
                 keep[com.cmd] = com
@@ -51,12 +60,12 @@ def extract_commands(html_docs, base_commands=None):
 
 
 class CommandExtractor(object):
-    """Extract commands from html documents.
+    """Extract commands from a html document.
 
     Usage:
 
     >>> extractor = CommandExtractor('git')
-    >>> for line, cmd in extractor.iter_commands(html_doc)
+    >>> for line_nr, cmd in extractor.iter_commands(html_doc)
     >>>    ...
 
     """
@@ -67,7 +76,7 @@ class CommandExtractor(object):
         # The command could start with sudo
         r'(?P<cmd>(sudo\s+|)'
         # Command must start with a lower case letter or a digit.
-        # A more detailed check of the command will be done in is_command
+        # A more detailed check of the command will be done in is_command.
         r'[a-z0-9][a-z0-9\-]*'
         # The rest of the command that contains sub command name,
         # options and arguments.
@@ -81,20 +90,23 @@ class CommandExtractor(object):
         r'[a-z0-9][a-z0-9\-]*[a-z0-9]'
         r')$'))
 
+    BASE_CMDS_REX = r'^(%s)\b'
+    RE_ALL_COMMANDS = re.compile(BASE_CMDS_REX % '|'.join(
+        map(re.escape, ALL_COMMANDS)))
+
     RE_SPACE = re.compile(r'\s+', re.U+re.S)
     RE_ONLY_LETTERS = re.compile('^[a-z]+$', re.I)
     RE_SENTENCE_END = re.compile(r'[a-z][\.\!\?\:]+$')
     RE_FLAG = re.compile(r'^(-){1,2}[a-z0-9]')
     RE_SUDO = re.compile(r'^sudo\s+')
 
-    # The max length of a command
     MAX_COMMAND_LENGTH = 200
     # The command must not contain more than this many consecutively
     # words that only contain letters.
     MAX_CONSECUTIVELY_LETTER_WORDS = 2
 
     def __init__(self, base_commands=None):
-        if isinstance(base_commands, basestring):
+        if isinstance(base_commands, str):
             base_commands = [base_commands]
         if base_commands:
             base_commands = set(base_commands)
@@ -102,7 +114,14 @@ class CommandExtractor(object):
             self.remove_sudo = lambda cmd: cmd
         else:
             self.remove_sudo = lambda cmd: self.RE_SUDO.sub('', cmd)
-        self.wanted_commands = base_commands
+        self.re_wanted_commands = self._get_wanted_rex(base_commands)
+
+    def _get_wanted_rex(self, base_commands):
+        if not base_commands:
+            return self.RE_ALL_COMMANDS
+        else:
+            return re.compile(self.BASE_CMDS_REX % '|'.join(
+                map(re.escape, base_commands)))
 
     def iter_commands(self, html_doc):
         """Generate commands found in the html document."""
@@ -126,11 +145,10 @@ class CommandExtractor(object):
 
     def has_wanted_command(self, line):
         """Return True if the line contains any of the wanted commands."""
-        if not self.wanted_commands:
-            return True
         cmds = line.split(' | ')
         for cmd in cmds:
-            if cmd.split()[0] in self.wanted_commands:
+            cmd = cmd.strip()
+            if self.re_wanted_commands.search(cmd):
                 return True
         return False
 
@@ -169,7 +187,8 @@ class CommandExtractor(object):
         for word in words:
             if self.RE_ONLY_LETTERS.match(word):
                 nr_consecutively_letter_words += 1
-                if nr_consecutively_letter_words > 2:
+                if nr_consecutively_letter_words > \
+                   self.MAX_CONSECUTIVELY_LETTER_WORDS:
                     return False
                 only_letters.append(word)
             else:
@@ -179,8 +198,8 @@ class CommandExtractor(object):
                 others.append(word)
         if flags:
             return True
-        if not others:
-            return False
+        #if not others:
+        #    return False
         return True
 
     def iter_text_lines(self, html_doc):
@@ -224,6 +243,8 @@ class CommandExtractor(object):
                         yield first_line + line, txt_line
 
     def skip_tree(self, tree):
+        if tree.tag == 'a' and tree.attrib.get('href'):
+            return True
         return tree.tag in self.IGNORE_TAGS
 
     def fix_space(self, txt):

@@ -1,0 +1,5 @@
+requests-futures
+lxml
+cssselect
+pygments
+tld

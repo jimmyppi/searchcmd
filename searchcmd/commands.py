@@ -1,8 +1,9 @@
+from operator import itemgetter
+from collections import Counter
+
 from pygments import highlight
 from pygments.lexers import BashLexer
 from pygments.formatters import TerminalFormatter
-
-from collections import Counter
 
 LEXER = BashLexer()
 FORMATTER = TerminalFormatter()
@@ -61,7 +62,7 @@ class Command(object):
         """
         cmd = highlight(self.cmd, LEXER, FORMATTER).strip()
         domains = u'({})'.format(
-            ', '.join(d for d,_ in self.domains.most_common(2)))
+            u', '.join(d for d,_ in self.domains.most_common(2)))
         s = u'{}\t{}'.format(cmd, domains)
         if verbose:
             s += u'\n {}'.format(
@@ -95,11 +96,11 @@ class Commands(object):
     def rank_commands(self, nr=5):
         cmds = [(cmd.score(self.nr_docs), cmd)
                 for cmd in self]
-        cmds.sort(reverse=True)
+        cmds.sort(key=itemgetter(0), reverse=True)
         return [cmd for _, cmd in cmds[:nr]]
 
     def __iter__(self):
-        for command in self.commands.itervalues():
+        for command in self.commands.values():
             yield command
 
     def to_dict(self):

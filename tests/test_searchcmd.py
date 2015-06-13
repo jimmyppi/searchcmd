@@ -1,25 +1,53 @@
 import sys
-from io import BytesIO
+from io import StringIO
 from unittest import TestCase
 
 import requests_mock
 
-from commands import Commands
-from testutils import get_html_doc
-from search_engines import get_engine
+from searchcmd.commands import Commands, Command
+from searchcmd.download import HtmlDocument
+from tests.testutils import get_html_doc
+from searchcmd.search_engines import get_engine
 import searchcmd
+
 main = searchcmd.main
 
 
 class TestSearchCommand(TestCase):
 
     def setUp(self):
-        self.orig_stdout = sys.stdout
-        self.internal_stdout = BytesIO()
-        sys.stdout = self.internal_stdout
+        self.internal_stdout = StringIO()
+        self.internal_stderr = StringIO()
+        searchcmd.stdout = searchcmd.get_print_func(self.internal_stdout)
+        searchcmd.stderr = searchcmd.get_print_func(self.internal_stderr)
 
     def tearDown(self):
-        sys.stdout = self.orig_stdout
+        searchcmd.stdout = searchcmd.get_print_func(sys.stdout)
+        searchcmd.stderr = searchcmd.get_print_func(sys.stderr)
+
+    def test_print(self):
+        searchcmd.stdout = searchcmd.get_print_func(sys.stdout)
+
+        def mock_search(query_string=None, cmd=None, **kwargs):
+            coms = Commands()
+            cmd = u'git commit \u2013amend -m \u2018new message\u2019'
+            doc = HtmlDocument(u'http://example.com', b'', 1)
+            coms.add_command(Command(cmd, 1, 1, doc))
+            return coms
+
+        orig_search = searchcmd.search
+        searchcmd.search = mock_search
+        try:
+            main(['git commit', '--no-cache'])
+        finally:
+            searchcmd.search = orig_search
+
+    def test_search_engine_error(self):
+        searchcmd.stdout = searchcmd.get_print_func(sys.stdout)
+        searchcmd.stderr = searchcmd.get_print_func(sys.stderr)
+        with requests_mock.mock() as m:
+            exit_code = main(['find', '--no-cache'])
+            self.assertNotEqual(exit_code, 0)
 
     def test_query(self):
         self.result = None

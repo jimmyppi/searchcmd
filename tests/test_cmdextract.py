@@ -1,15 +1,17 @@
-from itertools import izip
+try:
+    from itertools import izip as zip
+except ImportError:
+    pass
 from unittest import TestCase
 
-from testutils import iter_html_docs, get_html_doc
-from download import HtmlDocument
-from cmdextract import CommandExtractor, extract_commands
+from tests.testutils import iter_html_docs, get_html_doc
+from searchcmd.download import HtmlDocument
+from searchcmd.cmdextract import CommandExtractor, extract_commands
 
 TEST_DATA_DIR = 'cmdextract'
 
 COMMANDS = {
     'http://unixmantra.com': [
-        (1221, 'file1 file2 "file three" \'file four\' file\\ five'),
         (1254, u'find ./music -name "*.mp3" -print0 | xargs -0 ls'),
         (1258, u'find ./work -print | xargs grep "profit"'),
         (1267,
@@ -25,7 +27,6 @@ COMMANDS = {
         (1387, 'ar r lib.a chap3 ?...')],
     'http://brunolinux.com': [
         (62, "sed -i 's/ugly/beautiful/g' /home/bruno/old-friends/sue.txt"),
-        (71, 'with "'),
         (91, ("find /home/bruno/old-friends -type f "
               "-exec sed -i 's/ugly/beautiful/g' {} \\;")),
         (118, u'mv $fl $fl.old'),
@@ -50,20 +51,13 @@ COMMANDS = {
         (234, u'hwclock \u2013show'),
         (235, u'hwclock \u2013systohc'),
         (286, 'date +%Y%m%d -s "20080817"'),
-        (318, 'this is gr8'),
-        (336, 'thanks !'),
-        (337, 'very nice article, super easy :)'),
         (354, u'date set=\u201d2 OCT 2006 18:00:00\u2033'),
         (371, u'date -s \u201d2 OCT 2006 18:00:00\u2033'),
         (380, u'date \u2013set=\u201d2 sep 2011 11:27:20\u2033'),
         (412, u'hwclock \u2013systohc'),
         (479, 'date 07252208002009'),
-        (480, 'decodes as # date MMDDhhmmssYYYY'),
         (623, u'date +%Y%m%d%T -s \u201c20081225 10:05:00\u2033'),
-        (650, u'thanks guys\u2026.lov u \u2026\u2026..'),
         (704, u'date \u2013set=\u201d2 OCT 2006 18:00:00\u2033'),
-        (712, 'thinks bro,'),
-        (823, 'thanx :)'),
         (832, 'for example 23/03/2011 to 23.03.2011'),
         (841, u'hwclock \u2013show'),
         (843, 'ls -l /etc/localtime'),
@@ -74,11 +68,6 @@ COMMANDS = {
         (850, u'hwclock \u2013show'),
         (852, 'ls -l /etc/localtime'),
         (929, 'date 030613252012'),
-        (951, 'it means :'),
-        (974, 'nothing ;'),
-        (1007, 'it means :'),
-        (1081, 'it means :'),
-        (1105, 'it means :'),
         (1126, 'uname -a'),
         (1144, u'date -s \u201cYYYY-MM-DD HH:MM:SS\u201d'),
         (1161, 'uname -a'),
@@ -86,19 +75,18 @@ COMMANDS = {
         (1239, (u'python -c \u2018import platform ; '
                 u'print platform.dist()[0]\u2019')),
         (1260, u'su \u2013'),
+        (1261, 'passwd root'),
         (1301, u'date +%T -s \u201c10:13:13\u2033'),
-        (1310, u'date -s \u201cYYYY-MM-DD HH:MM:SS\u201d'),
-        (1365, ('lrwxrwxrwx 1 root root 37 Oct 28 15:48 /etc/localtime -> '
-                '/usr/share/zoneinfo/America/Vancouver'))],
+        (1310, u'date -s \u201cYYYY-MM-DD HH:MM:SS\u201d')],
     'http://stackoverflow.com': [
         (5, 'du -h --max-depth=1'),
         (24, 'du -h -s *')]
 }
 
-NR_TEXTS = {'http://unixmantra.com': 400,
-            'http://brunolinux.com': 61,
-            'http://cyberciti.biz': 1042,
-            'http://stackoverflow.com': 55}
+NR_TEXTS = {'http://unixmantra.com': 225,
+            'http://brunolinux.com': 47,
+            'http://cyberciti.biz': 705,
+            'http://stackoverflow.com': 49}
 
 MERGED_COMMANDS = set([
     u'find ./music -name "*.mp3" -print0 | xargs -0 ls',
@@ -120,7 +108,6 @@ MERGED_COMMANDS = set([
     u'date -s \u201d2 OCT 2006 18:00:00\u2033',
     'date +%Y%m%d -s "20081128"',
     'find . -name "*.sh" | xargs grep "ksh"',
-    u'thanks guys\u2026.lov u \u2026\u2026..',
     'date 041106232011',
     'ar r lib.a chap3 ?...',
     u'find ./work -print | xargs grep "profit"',
@@ -137,7 +124,6 @@ MERGED_COMMANDS = set([
      "-exec sed -i 's/ugly/beautiful/g' {} \\;"),
     'date -s "2 OCT 2006 18:00:00"',
     u"sed 's/FINDSTRING/REPLACESTRING/g' $fl.old > $fl",
-    'thanks !',
     'date 030613252012',
     u'date set=\u201d2 OCT 2006 18:00:00\u2033',
     u'hwclock \u2013show',
@@ -169,7 +155,7 @@ class TestCommandExtract(TestCase):
             get_html_doc(TEST_DATA_DIR, 'stackoverflow.com'), 'xargs')
         self.assertEqual(cmds.commands, {})
 
-        doc = HtmlDocument('http://stackoverflow.com', '')
+        doc = HtmlDocument('http://stackoverflow.com', b'')
         doc.body = None
         cmds = extract_commands(doc)
         self.assertEqual(cmds.nr_docs, 0)
@@ -177,7 +163,7 @@ class TestCommandExtract(TestCase):
     def test_iter_texts(self):
         extractor = CommandExtractor()
         for doc in iter_html_docs(TEST_DATA_DIR):
-            print doc.url.url
+            print(doc.url.url)
             nr_txts = 0
             for line, txt in extractor.iter_text_lines(doc):
                 nr_txts += 1
@@ -186,9 +172,9 @@ class TestCommandExtract(TestCase):
     def test_iter_commands(self):
         extractor = CommandExtractor()
         for doc in iter_html_docs(TEST_DATA_DIR):
-            print doc.url.url
-            for (line, cmd), correct in izip(extractor.iter_commands(doc),
-                                             COMMANDS[doc.url.url]):
+            print(doc.url.url)
+            for (line, cmd), correct in zip(extractor.iter_commands(doc),
+                                            COMMANDS[doc.url.url]):
                 self.assertEqual((line, cmd), correct)
 
     def test_get_command(self):
@@ -221,6 +207,12 @@ class TestCommandExtract(TestCase):
         self.assertFalse(ext.has_wanted_command(
             u'ls -hl'))
 
+        ext = CommandExtractor(['git commit'])
+        self.assertTrue(ext.has_wanted_command(
+            u'git commit --amend'))
+        self.assertFalse(ext.has_wanted_command(
+            u'git pull origin master'))
+
     def test_is_command_name(self):
         ext = CommandExtractor()
 
@@ -242,8 +234,7 @@ class TestCommandExtract(TestCase):
         ext = CommandExtractor()
         self.assertTrue(ext.is_command_output(
             'drwxr-xr-x   3 root root 4,0K maj  5  2014 home'))
-        self.assertFalse(ext.is_command_output(
-            'total 0'))
+        self.assertFalse(ext.is_command_output('total 0'))
 
     def test_is_command(self):
         ext = CommandExtractor()
@@ -251,6 +242,7 @@ class TestCommandExtract(TestCase):
         self.assertTrue(ext.is_command(
             u'date -s \u201cYYYY-MM-DD HH:MM:SS\u201d'))
         self.assertTrue(ext.is_command('uname -a'))
+        self.assertTrue(ext.is_command('git log'))
 
         self.assertFalse(ext.is_command(''))
         self.assertFalse(ext.is_command('when I use:'))
@@ -267,5 +259,4 @@ class TestCommandExtract(TestCase):
         self.assertFalse(ext.is_command('250 total'))
 
         # TODO
-        self.assertFalse(ext.is_command('git log'))
         self.assertTrue(ext.is_command('thanx :)'))
