@@ -57,10 +57,9 @@ setup(
     test_suite='tests',
     extras_require={'testing': ['pytest']},
     zip_safe=False,
-    # TODO
     keywords='searchcmd cli',
     classifiers=[
-        'Development Status :: 2 - Pre-Alpha',
+        'Development Status :: 4 - Beta',
         'Intended Audience :: Developers',
         'Intended Audience :: System Administrators',
         'License :: OSI Approved :: BSD License',
@@ -69,8 +68,8 @@ setup(
         'Programming Language :: Python :: 2.7',
         'Programming Language :: Python :: 3',
         'Programming Language :: Python :: 3.4',
-        # TODO
         'Operating System :: POSIX',
+        'Environment :: Console',
         'Topic :: Software Development',
         'Topic :: System :: Systems Administration'
     ],
