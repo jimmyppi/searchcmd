@@ -78,16 +78,13 @@ Manual
 Similar projects
 ----------------
 
-Useful examples at the command line:
-https://github.com/srsudar/eg
-
-Search commandlinefu.com from the terminal:
-https://github.com/ncrocfer/clf
+* Useful examples at the command line: https://github.com/srsudar/eg
+* Search commandlinefu.com from the terminal: https://github.com/ncrocfer/clf
 
 Todo
 ----
 
-* Support for recognizing more advanced prompts. Example: `um@server#find . -name "*sh*"`
+* Support for recognizing more advanced prompts. Example: ``um@server#find . -name "*sh*"``
 * Merge commands that do the same thing.
 * Support for beautifulsoup in py3.
 * An open ended search (for example "search replace") will only find commands that are installed on the system. Better filtering of false positives is needed to allow unknown commands. A solution could be to train a probabilistic parser like https://github.com/datamade/parserator
