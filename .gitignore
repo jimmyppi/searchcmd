@@ -1,2 +1,5 @@
 *.pyc
 *[~#]
+.cache
+.eggs
+searchcmd.egg-info
