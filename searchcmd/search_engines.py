@@ -14,10 +14,12 @@ Extract urls:
 """
 
 import re
+
 try:
     from urllib import quote_plus, unquote
 except ImportError:
     from urllib.parse import quote_plus, unquote
+
 from collections import defaultdict
 
 from lxml import html
@@ -35,7 +37,7 @@ class SearchEngine(object):
     BASE_URL = None
     RE_INTERNAL_DOMAINS = None
 
-    RE_URL_AS_PARAM = re.compile(r'http[^&]+')
+    RE_URL_AS_PARAM = re.compile(r'https?:/{2}[^.]*\.[^&\s]*')
 
     def get_search_request(self, query):
         url = self.BASE_URL.format(quote_plus(query.encode('utf-8')))

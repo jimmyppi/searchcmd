@@ -1,7 +1,7 @@
 from unittest import TestCase
 
 from tests.testutils import get_html_doc
-from searchcmd.search_engines import get_engine
+from searchcmd.search_engines import get_engine, SearchEngine
 
 TEST_DATA_DIR = 'search_engines'
 
@@ -49,3 +49,39 @@ class TestSearchEngines(TestCase):
 
         urls = e.get_hits(doc)
         self.assertEqual([u.url for u in urls], expected_urls)
+
+    def test_RE_URL_AS_PARAM(self):
+        matched_urls = [
+            'abchttp://example.com?get=1',
+            'abc http://example.com?get=1 ',
+            'abchttps://example.com?get=1',
+            'abchttps://example.com?get=1"',
+            'abchttp://example.com?get=1&gett=2',
+            'abc hhttp://example.com?get=1',
+            'abc http http://example.com?get=1',
+            'abc http https://example.com?get=1',
+            'abc https https://example.com?get=1',
+            'https://b.com',
+        ]
+
+        for url in matched_urls:
+            self.assertIsNotNone(SearchEngine.RE_URL_AS_PARAM.search(url))
+
+        no_matched_urls = [
+            '',
+            'abchtttp://example.com?get=1',
+            'abchttpp://example.com?get=1',
+            'abchttpss://example.com?get=1',
+            'abchttp//example.com?get=1',
+            'abchttp:/example.com?get=1',
+            'abchttp:example.com?get=1',
+            'abc http htts://example.com?get=1',
+            'abc http ttps://example.com?get=1',
+            'https://',
+            'http://',
+            'http://a',
+            'https://b',
+        ]
+
+        for url in no_matched_urls:
+            self.assertIsNone(SearchEngine.RE_URL_AS_PARAM.search(url))

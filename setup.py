@@ -52,7 +52,7 @@ setup(
     entry_points={
         'console_scripts': ['searchcmd = searchcmd:main']
     },
-    tests_require=['pytest', 'requests_mock'],
+    tests_require=['pytest', 'requests_mock', 'mock'],
     cmdclass={'test': PyTest},
     test_suite='tests',
     extras_require={'testing': ['pytest']},
